@@ -1,10 +1,12 @@
 package main;
 
+import controller.Controller;
+
 public class Main {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		Controller controler = new Controller();
+		controler.run();
 	}
 
 }

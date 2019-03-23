@@ -1,83 +1,83 @@
 package model.data_structures;
+/**
+ * 
+ * @author wihoho. Taken from https://gist.github.com/wihoho/5651772
+ *
+ * @param <T>
+ */
 
-public class ColaPrioridadHeap <T extends Comparable<T>> implements IColaPrioridad<T>{
+public class ColaPrioridadHeap <T extends Comparable<T>>{
 
-	protected NodoColaPrioridad<T> primero;
+	T[] arr;
+    int N;
 
-	protected NodoColaPrioridad<T> ultimo;
-	
-	protected int numElems;
-	
-	public int darNumElementos() {
-		return numElems;
-	}
+    public ColaPrioridadHeap(){
+        arr = (T[]) new Comparable[2];
+        N = 0;
+    }
 
-	@Override
-	public T tomarElemento() throws Exception {
-		if( primero == null )
-			throw new Exception( "No hay elementos en la cola" );
-		else
-		{
-			NodoColaPrioridad<T> p = primero;
-			primero = primero.desconectarPrimero( );
-			if( primero == null )
-				ultimo = null;
-			numElems--;
-			return p.darElemento( );
-		}
-	}
+    public void insert(T t){
+        if (N == arr.length - 1) resize(2*N + 1);
+        arr[++N] = t;
+        swim(N);
+    }
 
-	@Override
-	public void agregar(T elemento) {
-		NodoColaPrioridad<T> nodo = new NodoColaPrioridad<T>( elemento );
-		if( primero == null )
-		{
-			primero = nodo;
-			ultimo = nodo;
-		}
-		// Verifica si tiene mayor prioridad que el primer elemento de la cola
-		else if( primero.darElemento().compareTo(elemento) < 0 )
-		{
-			nodo.insertarDespues( primero );
-			primero = nodo;
-		}
-		else
-		{
-			// Recorre la cola hasta encontrar un nodo de menor prioridad
-			boolean inserto = false;
-			for( NodoColaPrioridad<T> p = primero; !inserto && p.darSiguiente( ) != null; p = p.darSiguiente( ) )
-			{
-				if( p.darSiguiente( ).darElemento().compareTo( elemento ) < 0 )
-				{
-					nodo.insertarDespues( p.darSiguiente( ) );
-					p.insertarDespues( nodo );
-					inserto = true;
-				}
-			}
-			if( !inserto )
-			{
-				// No lo ha insertado porque tiene la menor prioridad de toda la cola
-				ultimo = ultimo.insertarDespues( nodo );
-			}
-		}
-		numElems++;
-		
-	}
+    public T delMax(){
+        if (isEmpty()) return null;
+        T t= arr[1];
+        exch(1,N--);
+        arr[N+1] = null;
+        sink(1);
 
-	@Override
-	public boolean estaVacia() {
-		return primero == null;
-	}
+        //resize this array
+        if (N == (arr.length -1)/4) resize((arr.length-1) / 2 + 1);
+        return t;
+    }
+    //helper methods
+    public String toString(){
+        StringBuffer sb = new StringBuffer();
+        for(int i = 1; i <= N; i ++)
+            sb.append(arr[i].toString()+" ");
+        return sb.toString();
+    }
 
-	@Override
-	public T delMax() {
-		primero=primero.darSiguiente();
-		return null;
-	}
+    private boolean isEmpty(){
+        return N == 0;
+    }
+    private void resize(int capacity){
+        T[] copy = (T[]) new Comparable[capacity];
+        for(int i = 1; i <= N; i ++ )
+            copy[i] = arr[i];
+        arr = copy;
+    }
 
-	@Override
-	public T max() {
-		return primero.darElemento();
+    private void swim(int k){
+        while(k > 1 && less(k/2, k)){
+            exch(k/2,k);
+            k = k/2;
+        }
+    }
+
+    private void sink(int k){
+        while (2*k < N){
+            int j = 2 * k;
+            if(j < N && less(j, j +1)) j = j + 1;
+            if(less(j, k)) break;
+            exch(k,j);
+            k = j;
+        }
+    }
+
+    private boolean less(int i, int j){
+        if (arr[i].compareTo(arr[j]) < 0)
+            return true;
+        return false;
+    }
+
+    private void exch(int i, int j){
+        T temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
 }
-	
+
 }
