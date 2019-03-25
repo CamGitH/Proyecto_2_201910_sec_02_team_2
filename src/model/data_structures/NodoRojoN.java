@@ -1,49 +1,64 @@
 package model.data_structures;
 
-public class NodoRojoN <T extends Comparable<T>> {
 
-	private T elemento;
-	private boolean rojo;
-	private boolean negro;
-	private NodoRojoN<T> derecha;
-	private NodoRojoN<T> izq;
+public class NodoRojoN <V, K> {
+
+	public static final boolean RED = true;
+	public static final boolean BLACK = false;
 	
-	public NodoRojoN(T elemen){
+	private boolean color;
+	private NodoRojoN<V, K>  derecha, izq;
+	private K key;
+	private V value;
+	
+	public NodoRojoN(K k, V valor){
 		
-		elemento=elemen;
+		key=k;
+		value=valor;
 		izq=null;
 		derecha=null;
-		rojo = true;
-		rojo=false;
+		color = RED;
 	}
 	
 	
-	public void asignarIzq(NodoRojoN nodo){
+	
+	public void asignarIzq(NodoRojoN<V, K>  nodo){
 		izq=nodo;
 	}
 	
-	public void asignarDer(NodoRojoN nodo){
+	public void asignarDer(NodoRojoN<V, K>  nodo){
 		derecha=nodo;
 	}
 	
-	public NodoRojoN<T> darDerecha(){
+	public NodoRojoN<V, K>  darDerecha(){
 		return derecha;
 	}
-	public NodoRojoN<T> darIzq(){
+	public NodoRojoN<V, K>  darIzq(){
 		return izq;
 	}
 	
-	public boolean isRed(){
-		boolean r = false;
-		if (this.rojo){
-			r=true;
-		}
-		return r;
+	public int peso(){	
+		return 1;
 	}
 	
-	public int size(){
-		int tam = 1;
-		return tam;
+	public boolean darColor(){
+		return color;
 	}
 	
+	public void cambiarColor(){
+		if (color==RED){
+			color=BLACK;
+		}else{color = RED;}
+	}
+	
+	public void asignarColor(boolean col){
+		color = col;
+	}
+	public K darLlave(){
+		return key;
+	}
+	
+	public void asignarValor(V valor){
+		value=valor;
+	}
 }

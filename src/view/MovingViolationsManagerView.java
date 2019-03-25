@@ -18,17 +18,17 @@ public class MovingViolationsManagerView
 	
 	public void printMenu() {
 		System.out.println("---------ISIS 1206 - Estructuras de datos----------");
-		System.out.println("---------------------Taller 3----------------------");
-		System.out.println("0. Cargar datos del semestre");
-		System.out.println("1. Salir");
-		System.out.println("Digite el numero de opcion para ejecutar la tarea, luego presione enter: (Ej., 1):");
+		System.out.println("---------------------Proyecto 2----------------------");
+		System.out.println("0. Cree una nueva coleccion de infracciones en movimiento");
+		System.out.println("1. exit"); 
+		System.out.println("Digite el numero para ejecutar la tarea:"); 
+	}
+
+	public void printMessage(String string) {
+		System.out.println(string);
 		
 	}
-	
-	public void printMessage(String mensaje) {
-		System.out.println(mensaje);
-	}
-	
-	
-	
+
+
 }
+	

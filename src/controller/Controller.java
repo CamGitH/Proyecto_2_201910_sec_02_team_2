@@ -54,7 +54,8 @@ public class Controller {
 	public void loadMovingViolations(int numeroCuatrimestre) {
 
 		List<String[]> list = new ArrayList<String[]>();
-
+		int uno=0,dos=0,tres=0,cuatro=0,s=0,ss=0;
+		String u = null,d= null,t= null,c= null,i= null,e= null; 
 		CSVReader reader =null;
 
 		try{
@@ -66,83 +67,114 @@ public class Controller {
 				reader=new CSVReaderBuilder(new FileReader("./data/Moving_Violations_Issued_in_January_2018.csv")).withSkipLines(1).build();
 				list = reader.readAll();
 				readFiles(list);
+				uno=list.size();
+				u="January";
 				list.clear();
 
 				reader=new CSVReaderBuilder(new FileReader("./data/Moving_Violations_Issued_in_February_2018.csv")).withSkipLines(1).build();
 				list = reader.readAll();
 				readFiles(list);
+				dos=list.size();
+				d="February";
 				list.clear();
 
 				reader=new CSVReaderBuilder(new FileReader("./data/Moving_Violations_Issued_in_March_2018.csv")).withSkipLines(1).build();
 				list = reader.readAll();
 				readFiles(list);
+				tres=list.size();
+				t="March";
 				list.clear();
 
 				reader=new CSVReaderBuilder(new FileReader("./data/Moving_Violations_Issued_in_April_2018.csv")).withSkipLines(1).build();
 				list = reader.readAll();
 				readFiles(list);
+				cuatro=list.size();
+				c="April";
 				list.clear();
 
 				reader=new CSVReaderBuilder(new FileReader("./data/Moving_Violations_Issued_in_May_2018.csv")).withSkipLines(1).build();
 				list = reader.readAll();
 				readFiles(list);
+				s=list.size();
+				i="May";
 				list.clear();
 
 				reader=new CSVReaderBuilder(new FileReader("./data/Moving_Violations_Issued_in_June_2018.csv")).withSkipLines(1).build();
 				list = reader.readAll();
 				readFiles(list);
+				ss=list.size();
+				e="June";
 				list.clear();
 
+				
+				
 			case 2:
 
 				reader=new CSVReaderBuilder(new FileReader("./data/Moving_Violations_Issued_in_July_2018.csv")).withSkipLines(1).build();
 				list = reader.readAll();
 				readFiles(list);
+				uno=list.size();
+				u="July";
 				list.clear();
 
 				reader=new CSVReaderBuilder(new FileReader("./data/Moving_Violations_Issued_in_August_2018.csv")).withSkipLines(1).build();
 				list = reader.readAll();
 				readFiles(list);
+				dos=list.size();
+				d="Agust";
 				list.clear();
 
 				reader=new CSVReaderBuilder(new FileReader("./data/Moving_Violations_Issued_in_September_2018.csv")).withSkipLines(1).build();
 				list = reader.readAll();
 				readFiles(list);
+				tres=list.size();
+				t="September";
 				list.clear();
 
 				reader=new CSVReaderBuilder(new FileReader("./data/Moving_Violations_Issued_in_October_2018.csv")).withSkipLines(1).build();
 				list = reader.readAll();
 				readFiles(list);
+				cuatro=list.size();
+				c="October";
 				list.clear();
 
 				reader=new CSVReaderBuilder(new FileReader("./data/Moving_Violations_Issued_in_November_2018.csv")).withSkipLines(1).build();
 				list = reader.readAll();
 				readFiles(list);
+				s=list.size();
+				i="November";
 				list.clear();
 
 				reader=new CSVReaderBuilder(new FileReader("./data/Moving_Violations_Issued_in_December_2018.csv")).withSkipLines(1).build();
 				list = reader.readAll();
 				readFiles(list);
+				ss=list.size();
+				e="December";
 				list.clear();
 
 
 			}
-		}catch( Exception e){
+		}catch( Exception ee){
 
-			e.printStackTrace();
+			ee.printStackTrace();
 
 		}
 		
 		System.out.println("\nSe cargaron "+ listaEncadenda.getSize() +" infracciones\n");
 		System.out.println("Estas son las primeras 10 infracciones cargadas:\n");
 		NodoLinkedList<VOMovingViolation> elem = listaEncadenda.darPrimero();
-		for(int i = 0; i<10;i++){
+		for(int ii = 0; ii<10;ii++){
 			System.out.println(elem.darElemento().toString());
 			elem = elem.darSiguiente();
 		
 		}
-		System.out.println("---------------------------------------------------");
-		
+		System.out.println("-----------------------------------------------------------------------------");
+		System.out.println(uno+" datos cargados en "+u+".");
+		System.out.println(dos+" datos cargados en "+d+".");
+		System.out.println(tres+" datos cargados en "+t+".");
+		System.out.println(cuatro+" datos cargados en "+c+".");
+		System.out.println(s+ " datos cargados en "+i+".");
+		System.out.println(ss+" datos cargados en "+e+".");
 		
 
 

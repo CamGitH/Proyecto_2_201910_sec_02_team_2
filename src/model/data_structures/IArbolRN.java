@@ -1,34 +1,34 @@
 package model.data_structures;
 
-public interface IArbolRN<T> extends Comparable<T>{
+public interface IArbolRN<K, V>{
 	
-	boolean isRed(NodoRojoN nodo);
+	boolean darColor(NodoRojoN<V, K> nodo);
 	
-	int size (NodoRojoN nodo);
+	int size (NodoRojoN<V, K> nodo);
 	
 	int sizeTotal();
 	
 	boolean isEmpty();
 	
-	<K> void get(K key);
+	NodoRojoN<V, K> buscar(K key);
 	
-	<K> boolean contains(K key);
+	//boolean contains(K key);
 	
-	NodoRojoN<Comparable<T>> put ();
+	void add (V valor, K llave);
 	
-	void deleteMin();
+	//void deleteMin();
 	
-	void deleteMax();
+	//void deleteMax();
 	
-	void delete();
+	void delete(NodoRojoN<V, K> nodo);
 	
-	NodoRojoN rotateRight(NodoRojoN nodo);
+	void rotateRight(NodoRojoN<V, K> nodo);
 	
-	NodoRojoN rotateLeft(NodoRojoN nodo);
+	void rotateLeft(NodoRojoN<V, K> nodo);
 	
-	void flipCollors(NodoRojoN nodo);
+	void flipCollors(NodoRojoN<V, K> nodo);
 	
-	void moveRedLeft(NodoRojoN nodo);
-	
-	void rotateRedRight(NodoRojoN nodo);
+//	void moveRedLeft(NodoRojoN<V, K> nodo);
+//	
+//	void rotateRedRight(NodoRojoN<V, K> nodo);
 }
