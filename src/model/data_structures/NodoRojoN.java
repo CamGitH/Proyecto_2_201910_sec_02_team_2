@@ -10,7 +10,10 @@ public class NodoRojoN <V, K> {
 	private NodoRojoN<V, K>  derecha, izq;
 	private K key;
 	private V value;
+<<<<<<< HEAD
 	 private int size; 
+=======
+>>>>>>> 1d4c3924e3d35b0c8a81bc2e3158dc552e4e2e6c
 	
 	public NodoRojoN(K k, V valor){
 		
@@ -42,7 +45,10 @@ public class NodoRojoN <V, K> {
 		return 1;
 	}
 	
+<<<<<<< HEAD
 	
+=======
+>>>>>>> 1d4c3924e3d35b0c8a81bc2e3158dc552e4e2e6c
 	public boolean darColor(){
 		return color;
 	}
@@ -59,9 +65,12 @@ public class NodoRojoN <V, K> {
 	public K darLlave(){
 		return key;
 	}
+<<<<<<< HEAD
 	public V darValor(){
 		return value;
 	}
+=======
+>>>>>>> 1d4c3924e3d35b0c8a81bc2e3158dc552e4e2e6c
 	
 	public void asignarValor(V valor){
 		value=valor;

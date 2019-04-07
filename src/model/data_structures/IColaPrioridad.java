@@ -2,7 +2,7 @@ package model.data_structures;
 
 public interface IColaPrioridad<T> {
 
-int darNumElementos( );
+	int darNumElementos( );
 	
 	T tomarElemento( ) throws Exception;
 	
@@ -10,8 +10,8 @@ int darNumElementos( );
 	
 	 boolean estaVacia( );
 	 
-	 T delMax ();
+	T delMax ();
 	
-T max();
+	T max();
 
 }

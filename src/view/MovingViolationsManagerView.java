@@ -13,6 +13,7 @@ public class MovingViolationsManagerView {
 	public void printMenu() {
 		System.out.println("---------ISIS 1206 - Estructuras de datos----------");
 		System.out.println("---------------------Proyecto 2----------------------");
+<<<<<<< HEAD
 		System.out.println("0. Cargar datos del semestre");
 		System.out.println("1. Obtener el ranking de las N franjas horarias que tengan mas infracciones. (REQ 1A)");
 		System.out.println("2. Realizar  el  ordenamiento  de  las  infracciones  por  Localizacion  Geografica. (REQ 2A)");
@@ -30,11 +31,18 @@ public class MovingViolationsManagerView {
 		System.out.println("11. Salir");
 		System.out.println("Digite el numero de opcion para ejecutar la tarea, luego presione enter: (Ej., 1):");
 		
+=======
+		System.out.println("0. Cree una nueva coleccion de infracciones en movimiento");
+		System.out.println("1. exit"); 
+		System.out.println("Digite el numero para ejecutar la tarea:"); 
+>>>>>>> 1d4c3924e3d35b0c8a81bc2e3158dc552e4e2e6c
 	}
-	
-	public void printMessage(String mensaje) {
-		System.out.println(mensaje);
+
+	public void printMessage(String string) {
+		System.out.println(string);
+		
 	}
+<<<<<<< HEAD
 	
 	public void printResumenLoadMovingViolations(EstadisticasCargaInfracciones resultados) {
 		int mes = 1;
@@ -176,4 +184,9 @@ public class MovingViolationsManagerView {
 	
 	
 	
+=======
+
+
+>>>>>>> 1d4c3924e3d35b0c8a81bc2e3158dc552e4e2e6c
 }
+	
