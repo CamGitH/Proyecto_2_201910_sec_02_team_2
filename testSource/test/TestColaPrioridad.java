@@ -4,9 +4,9 @@
 package test;
 
 import static org.junit.Assert.*;
+
 import org.junit.Test;
 import model.data_structures.ColaPrioridadHeap;
-import model.violations.VOMovingViolation;
 
 /**
  * @author Tomás Langebaek

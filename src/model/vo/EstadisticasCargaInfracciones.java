@@ -13,22 +13,23 @@ public class EstadisticasCargaInfracciones {
 	private int numeroMeses;
 	
 	// numero de infraccioens cargadas x cada mes
-	private int [] numeroInfraccionesxMes;
+	private String [] numeroInfraccionesxMes;
 	
 	// minX es minimax[0], minY es minimax[1], maxX es minimax[2], maxY es minimax[3]
 	private double [] minimax;
 	
 	/**
-	 * Constructor con el resumen de la carga de la lectura de las infracciones
-	 // TODO definir los parametros necesarios para inicializar los atributos de la clase
-	 * @param parametro1 con valor para un dato de la carga de archivos
-	 * @param parametro2 con valor para un dato de la carga de archivos
 	 * 
+	 * @param pTotalInfracciones numero infracciones
+	 * @param pNumeroMeses numero meses
+	 * @param pNumeroInfraccionesxMes arreglo del numero de infracciones por mes
+	 * @param pMinimax min y max coordx y coordy
 	 */
-	public EstadisticasCargaInfracciones()
-	{
-		// TODO Definir los parametros del metodo
-		// TODO inicializar valores de atributos con valores de parametros
+	public EstadisticasCargaInfracciones(int pTotalInfracciones, int pNumeroMeses, String[] pNumeroInfraccionesxMes, double[] pMinimax) {
+		totalInfracciones = pTotalInfracciones;
+		numeroMeses = pNumeroMeses;
+		numeroInfraccionesxMes = pNumeroInfraccionesxMes;
+		minimax = pMinimax;
 	}
 	
 	/**
@@ -40,6 +41,7 @@ public class EstadisticasCargaInfracciones {
 		return numeroMeses;
 	}
 	
+
 	/**
 	 * Retorna el numero total de infracciones cargadas 
 	 */
@@ -52,7 +54,7 @@ public class EstadisticasCargaInfracciones {
 	 * Retorna el numero de infracciones cargadas por cada mes de lectura de archivos
 	 * @return arreglo con el numero de infracciones cargadas por cada mes de lectura de archivos
 	 */
-	public int [] darNumeroDeInfraccionesXMes()
+	public String [] darNumeroDeInfraccionesXMes()
 	{
 		return numeroInfraccionesxMes;
 	}

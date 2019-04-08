@@ -1,11 +1,37 @@
 package model.vo;
 
-/**
- * Representation of a Trip object
- */
-public class VOMovingViolations {
+import java.util.Comparator;
+import model.vo.VOMovingViolations;
 
+/**
+ * Representation of a moving violation
+ */
+public class VOMovingViolations  implements Comparable<VOMovingViolations>{
 	
+	private int objectID;
+	private String location;
+	private String ticketIssueDate;
+	private String totalPaid;
+	private String accidentIndicator;
+	private String violationDescription;
+	private String streetSegId;
+	private String addressID;
+	
+
+	public VOMovingViolations(int pObjectID, String pLocation, String pTicketIssueDate, String pTotalPaid,
+			String pAccidentIndicator, String pViolatinDescription, String pStreetSegId, String pAddressID) {
+	
+		objectID = pObjectID;
+		location = pLocation;
+		ticketIssueDate = pTicketIssueDate;
+		totalPaid = pTotalPaid;
+		accidentIndicator = pAccidentIndicator;
+		violationDescription = pViolatinDescription;
+		streetSegId = pStreetSegId;
+		addressID = pAddressID;
+	}
+
+
 	@Override
 	public String toString() {
 		return "VOMovingViolations [objectId()=" + objectId() + ",\n getLocation()=" + getLocation()
@@ -17,59 +43,135 @@ public class VOMovingViolations {
 
 
 	/**
-	 * @return id - Identificador único de la infracción
+	 * @return objectId
 	 */
 	public int objectId() {
-		// TODO Auto-generated method stub
-		return 0;
+		return objectID;
 	}	
 	
 	
 	/**
-	 * @return location - Dirección en formato de texto.
+	 * @return location
 	 */
 	public String getLocation() {
-		// TODO Auto-generated method stub
-		return "";
+		return location;
 	}
 
 	/**
-	 * @return date - Fecha cuando se puso la infracción .
+	 * @return date
 	 */
 	public String getTicketIssueDate() {
-		// TODO Auto-generated method stub
-		return "";
+		return ticketIssueDate;
 	}
 	
 	/**
-	 * @return totalPaid - Cuanto dinero efectivamente pagó el que recibió la infracción en USD.
+	 * @return totalPaid
 	 */
-	public int getTotalPaid() {
-		// TODO Auto-generated method stub
-		return 0;
+	public String getTotalPaid() {
+		return totalPaid;
 	}
 	
 	/**
-	 * @return accidentIndicator - Si hubo un accidente o no.
+	 * @return accidentIndicator
 	 */
 	public String  getAccidentIndicator() {
-		// TODO Auto-generated method stub
-		return "";
+		return accidentIndicator;
 	}
 		
 	/**
-	 * @return description - Descripción textual de la infracción.
+	 * @return description
 	 */
 	public String  getViolationDescription() {
-		// TODO Auto-generated method stub
-		return "";
+		return violationDescription;
 	}
-	
+	/**
+	 * @return streetSegId
+	 */
 	public String getStreetSegId() {
-		return "";
+		return streetSegId;
+	}
+	/**
+	 * @return addressID
+	 */
+	public String getAddressId() {
+		return addressID;
 	}
 	
-	public String getAddressId() {
-		return "";
+	public static class TicketIssueDate implements Comparator<VOMovingViolations>{
+
+		@Override
+		public int compare(VOMovingViolations object1, VOMovingViolations object2) {
+			return object1.getTicketIssueDate().compareToIgnoreCase(object2.getTicketIssueDate());
+		}
+		
+	}
+	
+//	public static class ObjectID implements Comparator<VOMovingViolations>{
+//
+//		@Override
+//		public int compare(VOMovingViolations object1, VOMovingViolations object2) {
+//			return object1.objectId().compareToIgnoreCase(object2.objectId());
+//		}
+//		
+//	}
+	
+	public static class StreetSeg implements Comparator<VOMovingViolations>{
+
+		@Override
+		public int compare(VOMovingViolations object1, VOMovingViolations object2) {
+			return object2.getStreetSegId().compareToIgnoreCase(object1.getStreetSegId());
+		}
+		
+	}
+	
+	public static class AddressID implements Comparator<VOMovingViolations>{
+
+		@Override
+		public int compare(VOMovingViolations object1, VOMovingViolations object2) {
+			return object1.getAddressId().compareToIgnoreCase(object2.getAddressId());
+		}
+		
+	}
+	
+//	public static class TotalPaidAscendente implements Comparator<VOMovingViolations>{
+//
+//		@Override
+//		public int compare(VOMovingViolations object1, VOMovingViolations object2) {
+//			return object1.getTotalPaid().compareToIgnoreCase(object2.getTotalPaid());
+//		}
+//		
+//	}
+	
+//	public static class TotalPaidDescendente implements Comparator<VOMovingViolations>{
+//
+//		@Override
+//		public int compare(VOMovingViolations object1, VOMovingViolations object2) {
+//			return object2.getTotalPaid().compareToIgnoreCase(object1.getTotalPaid());
+//		}
+//		
+//	}
+//	
+	public static class ViolationDesc implements Comparator<VOMovingViolations>{
+
+		@Override
+		public int compare(VOMovingViolations object1, VOMovingViolations object2) {
+			return object1.getViolationDescription().compareToIgnoreCase(object2.getViolationDescription());
+		}
+		
+	}
+	
+	public static class ViolationCode implements Comparator<VOMovingViolations>{
+
+		@Override
+		public int compare(VOMovingViolations object1, VOMovingViolations object2) {
+			return object2.getViolationDescription().compareToIgnoreCase(object1.getViolationDescription());
+		}
+		
+	}
+
+	@Override
+	public int compareTo(VOMovingViolations arg0) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

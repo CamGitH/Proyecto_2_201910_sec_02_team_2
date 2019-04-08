@@ -1,9 +1,20 @@
 package model.logic;
 
+import java.io.FileReader;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+
+import model.data_structures.ArbolRojoN;
+import model.data_structures.ColaPrioridadHeap;
+import model.data_structures.HashTable;
 import model.data_structures.IQueue;
+import model.data_structures.LinkedList;
+import model.data_structures.NodoLinkedList;
 import model.vo.EstadisticaInfracciones;
 import model.vo.EstadisticasCargaInfracciones;
 import model.vo.InfraccionesFecha;
@@ -12,17 +23,28 @@ import model.vo.InfraccionesFranjaHoraria;
 import model.vo.InfraccionesFranjaHorariaViolationCode;
 import model.vo.InfraccionesLocalizacion;
 import model.vo.InfraccionesViolationCode;
+import model.vo.VOMovingViolations;
 
 public class MovingViolationsManager {
 
-	//TODO Definir atributos necesarios
+		//Lista Encadenada
+		private LinkedList<VOMovingViolations> listaEncadenada;
+		//Arbol Rojo Negro
+		private ArbolRojoN<Integer, VOMovingViolations> arbolRojoNegro;
+		//ColaPrioridad
+		private ColaPrioridadHeap<VOMovingViolations> colaPrioridad;
+		//HashTable
+		private HashTable<Integer, VOMovingViolations> hashTable;
 	
 	/**
 	 * Metodo constructor
 	 */
 	public MovingViolationsManager()
 	{
-		//TODO inicializar los atributos
+		listaEncadenada = new LinkedList<>();
+		arbolRojoNegro = new ArbolRojoN<>();
+		colaPrioridad = new ColaPrioridadHeap<>();
+		hashTable = new HashTable<>();
 	}
 	
 	/**
@@ -31,9 +53,148 @@ public class MovingViolationsManager {
 	 * @return objeto con el resultado de la carga de las infracciones
 	 */
 	public EstadisticasCargaInfracciones loadMovingViolations(int numeroSemestre) {
-		// TODO Realizar la carga de infracciones del semestre
+		List<String[]> list = new ArrayList<String[]>();
+		int uno=0,dos=0,tres=0,cuatro=0,s=0,ss=0;
+		String u = null,d= null,t= null,c= null,i= null,e= null; 
+		CSVReader reader =null;
+
+		try{
+			switch(numeroSemestre)
+			{
+
+			case 1:
+
+				reader=new CSVReaderBuilder(new FileReader("./data/Moving_Violations_Issued_in_January_2018.csv")).withSkipLines(1).build();
+				list = reader.readAll();
+				readFiles(list);
+				uno=list.size();
+				u="January";
+				list.clear();
+
+				reader=new CSVReaderBuilder(new FileReader("./data/Moving_Violations_Issued_in_February_2018.csv")).withSkipLines(1).build();
+				list = reader.readAll();
+				readFiles(list);
+				dos=list.size();
+				d="February";
+				list.clear();
+
+				reader=new CSVReaderBuilder(new FileReader("./data/Moving_Violations_Issued_in_March_2018.csv")).withSkipLines(1).build();
+				list = reader.readAll();
+				readFiles(list);
+				tres=list.size();
+				t="March";
+				list.clear();
+
+				reader=new CSVReaderBuilder(new FileReader("./data/Moving_Violations_Issued_in_April_2018.csv")).withSkipLines(1).build();
+				list = reader.readAll();
+				readFiles(list);
+				cuatro=list.size();
+				c="April";
+				list.clear();
+
+				reader=new CSVReaderBuilder(new FileReader("./data/Moving_Violations_Issued_in_May_2018.csv")).withSkipLines(1).build();
+				list = reader.readAll();
+				readFiles(list);
+				s=list.size();
+				i="May";
+				list.clear();
+
+				reader=new CSVReaderBuilder(new FileReader("./data/Moving_Violations_Issued_in_June_2018.csv")).withSkipLines(1).build();
+				list = reader.readAll();
+				readFiles(list);
+				ss=list.size();
+				e="June";
+				list.clear();
+
+
+
+			case 2:
+
+				reader=new CSVReaderBuilder(new FileReader("./data/Moving_Violations_Issued_in_July_2018.csv")).withSkipLines(1).build();
+				list = reader.readAll();
+				readFiles(list);
+				uno=list.size();
+				u="July";
+				list.clear();
+
+				reader=new CSVReaderBuilder(new FileReader("./data/Moving_Violations_Issued_in_August_2018.csv")).withSkipLines(1).build();
+				list = reader.readAll();
+				readFiles(list);
+				dos=list.size();
+				d="Agust";
+				list.clear();
+
+				reader=new CSVReaderBuilder(new FileReader("./data/Moving_Violations_Issued_in_September_2018.csv")).withSkipLines(1).build();
+				list = reader.readAll();
+				readFiles(list);
+				tres=list.size();
+				t="September";
+				list.clear();
+
+				reader=new CSVReaderBuilder(new FileReader("./data/Moving_Violations_Issued_in_October_2018.csv")).withSkipLines(1).build();
+				list = reader.readAll();
+				readFiles(list);
+				cuatro=list.size();
+				c="October";
+				list.clear();
+
+				reader=new CSVReaderBuilder(new FileReader("./data/Moving_Violations_Issued_in_November_2018.csv")).withSkipLines(1).build();
+				list = reader.readAll();
+				readFiles(list);
+				s=list.size();
+				i="November";
+				list.clear();
+
+				reader=new CSVReaderBuilder(new FileReader("./data/Moving_Violations_Issued_in_December_2018.csv")).withSkipLines(1).build();
+				list = reader.readAll();
+				readFiles(list);
+				ss=list.size();
+				e="December";
+				list.clear();
+
+
+			}
+		}catch( Exception ee){
+
+			ee.printStackTrace();
+
+		}
+
+		String[] infraccionesPorMes = {
+		uno+" datos cargados en "+u+"."
+		,dos+" datos cargados en "+d+"."
+		,tres+" datos cargados en "+t+"."
+		,cuatro+" datos cargados en "+c+"."
+		,s+ " datos cargados en "+i+"."
+		,ss+" datos cargados en "+e+"."};
 		
-		return null;
+		//TODO buscar min coord y max coord para X y Y. Y meterlo en las estadisticas como un arreglo de double[]
+		double[] prueba = {1,2,3,4};	
+		
+		EstadisticasCargaInfracciones stat = 
+				new EstadisticasCargaInfracciones(listaEncadenada.getSize(), 6, infraccionesPorMes, prueba);
+
+		return stat;
+
+	}
+
+	public void readFiles(List<String[]> list){
+
+		
+		for(int i = 0;i<list.size()/10;i++){
+
+			listaEncadenada.agregarIni(new VOMovingViolations(
+					Integer.parseInt(list.get(i)[0]),
+					list.get(i)[2],
+					list.get(i)[14],
+					list.get(i)[9],
+					list.get(i)[12],
+					list.get(i)[16],
+					list.get(i)[4],
+					list.get(i)[3]));  
+
+		}
+
 	}
 
 	/**
@@ -153,12 +314,12 @@ public class MovingViolationsManager {
 	  * @return Contenedora de objetos InfraccionesViolationCode.
 	  // TODO Definir la estructura Contenedora
 	  */
-	public Contenedora<InfraccionesViolationCode> ordenarCodigosPorNumeroInfracciones()
-	{
-		// TODO completar
-		// TODO Definir la Estructura Contenedora
-		return null;		
-	}
+//	public Contenedora<InfraccionesViolationCode> ordenarCodigosPorNumeroInfracciones()
+//	{
+//		// TODO completar
+//		// TODO Definir la Estructura Contenedora
+//		return null;		
+//	}
 
 
 }
