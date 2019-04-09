@@ -115,12 +115,12 @@ public class Controller {
 
 			case 5:						
 				view.printMessage("Ingrese la coordenada en X de la localizacion geografica (Ej. 1234,56): ");
-				xcoord = sc.nextDouble();
+				String xcoord2 = sc.next();
 				view.printMessage("Ingrese la coordenada en Y de la localizacion geografica (Ej. 5678,23): ");
-				ycoord = sc.nextDouble();
+				String ycoord2 = sc.next();
 
 				//TODO Completar para la invocación del metodo 2B
-				//model.consultarPorLocalizacionArbol(double xCoord, double yCoord)
+				model.consultarPorLocalizacionArbol(xcoord2, ycoord2);
 
 				//TODO Mostrar resultado de tipo InfraccionesLocalizacion 
 				//view.printReq2B( ... )

@@ -30,7 +30,7 @@ public class MovingViolationsManager {
 		//Lista Encadenada
 		private LinkedList<VOMovingViolations> listaEncadenada;
 		//Arbol Rojo Negro
-		private ArbolRojoN<Integer, VOMovingViolations> arbolRojoNegro;
+		private ArbolRojoN<String, VOMovingViolations> arbolRojoNegroCoordenadas;
 		//ColaPrioridad
 		private ColaPrioridadHeap<VOMovingViolations> colaPrioridad;
 		//HashTable
@@ -42,7 +42,7 @@ public class MovingViolationsManager {
 	public MovingViolationsManager()
 	{
 		listaEncadenada = new LinkedList<>();
-		arbolRojoNegro = new ArbolRojoN<>();
+		arbolRojoNegroCoordenadas = new ArbolRojoN<>();
 		colaPrioridad = new ColaPrioridadHeap<>();
 		hashTable = new HashTable<>();
 	}
@@ -183,7 +183,7 @@ public class MovingViolationsManager {
 		
 		for(int i = 0;i<list.size()/10;i++){
 
-			listaEncadenada.agregarIni(new VOMovingViolations(
+			VOMovingViolations infraccion = new VOMovingViolations(
 					Integer.parseInt(list.get(i)[0]),
 					list.get(i)[2],
 					list.get(i)[14],
@@ -191,9 +191,16 @@ public class MovingViolationsManager {
 					list.get(i)[12],
 					list.get(i)[16],
 					list.get(i)[4],
-					list.get(i)[3]));  
+					list.get(i)[3],
+					Double.parseDouble(list.get(i)[5]),
+					Double.parseDouble(list.get(i)[6]));  
+
+		
+			listaEncadenada.agregarIni(infraccion);
+			arbolRojoNegroCoordenadas.put(infraccion.getXCoord()+"", infraccion);
 
 		}
+		System.out.println(listaEncadenada.darPrimero().darElemento().toString());
 
 	}
 
@@ -254,9 +261,25 @@ public class MovingViolationsManager {
 	  *			double yCoord : Coordenada Y de la localizacion de la infracción
 	  * @return Objeto InfraccionesLocalizacion
 	  */
-	public InfraccionesLocalizacion consultarPorLocalizacionArbol(double xCoord, double yCoord)
+	public InfraccionesLocalizacion consultarPorLocalizacionArbol(String xCoord, String yCoord)
 	{
-		// TODO completar
+		int i = 0;
+		int j = 0;
+		VOMovingViolations[] listaTodos = null;
+		VOMovingViolations[] listaBuscados = null;
+		while(arbolRojoNegroCoordenadas.get(xCoord)!=null){
+		VOMovingViolations infraccion = arbolRojoNegroCoordenadas.get(xCoord);
+		listaTodos[i] = infraccion;
+		i++;
+		arbolRojoNegroCoordenadas.delete(xCoord);
+		if((infraccion.getYCoord()+"").equals(yCoord)){
+			listaBuscados[j] = infraccion;
+			j++;
+		}
+		}
+		
+		
+		//InfraccionesLocalizacion info = new InfraccionesLocalizacion(xCoord, yCoord, locat, address, street, lista);
 		return null;		
 	}
 	

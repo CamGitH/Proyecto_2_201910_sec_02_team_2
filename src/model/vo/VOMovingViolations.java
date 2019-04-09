@@ -16,10 +16,13 @@ public class VOMovingViolations  implements Comparable<VOMovingViolations>{
 	private String violationDescription;
 	private String streetSegId;
 	private String addressID;
+	private double xCoord;
+	private double yCoord;
 	
 
 	public VOMovingViolations(int pObjectID, String pLocation, String pTicketIssueDate, String pTotalPaid,
-			String pAccidentIndicator, String pViolatinDescription, String pStreetSegId, String pAddressID) {
+			String pAccidentIndicator, String pViolatinDescription, String pStreetSegId, String pAddressID
+			, double pXCoord, double pYCoord) {
 	
 		objectID = pObjectID;
 		location = pLocation;
@@ -29,6 +32,9 @@ public class VOMovingViolations  implements Comparable<VOMovingViolations>{
 		violationDescription = pViolatinDescription;
 		streetSegId = pStreetSegId;
 		addressID = pAddressID;
+		xCoord = pXCoord;
+		yCoord = pYCoord;
+		
 	}
 
 
@@ -38,7 +44,7 @@ public class VOMovingViolations  implements Comparable<VOMovingViolations>{
 				+ ",\n getTicketIssueDate()=" + getTicketIssueDate() + ",\n getTotalPaid()=" + getTotalPaid()
 				+ ",\n getAccidentIndicator()=" + getAccidentIndicator() + ",\n getViolationDescription()="
 				+ getViolationDescription() + ",\n getStreetSegId()=" + getStreetSegId() + ",\n getAddressId()="
-				+ getAddressId() + "]\n\n";
+				+ getAddressId()+ ",\n getXCoord()=" + getXCoord() + ",\n getYCoord()=" + getYCoord()+ "]\n\n";
 	}
 
 
@@ -95,6 +101,12 @@ public class VOMovingViolations  implements Comparable<VOMovingViolations>{
 	 */
 	public String getAddressId() {
 		return addressID;
+	}
+	public double getXCoord() {
+		return xCoord;
+	}
+	public double getYCoord() {
+		return yCoord;
 	}
 	
 	public static class TicketIssueDate implements Comparator<VOMovingViolations>{
