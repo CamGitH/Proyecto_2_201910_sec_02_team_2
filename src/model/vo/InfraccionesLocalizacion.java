@@ -1,6 +1,6 @@
 package model.vo;
 
-import model.data_structures.IQueue;
+import java.util.Queue;
 
 /**  
  * Agrupa las infracciones por (Xcoord, Ycoord) 
@@ -16,24 +16,24 @@ public class InfraccionesLocalizacion extends EstadisticaInfracciones {
 				+ porcentajeNoAccidentes + ",\n valorTotal=" + valorTotal + "]\n\n";
 	}
 
-	private double xcoord;
+	private String xcoord;
 	
-	private double ycoord;
+	private String ycoord;
 	
 	private String location;
 	
-	private int addressID;
+	private String addressID;
 	
-	private int streetID;
+	private String streetID;
 	
 	
 	/**
 	 * Instantiates a new infracciones localizacion.
-	 * @param lista the lista
+	 * @param listaBuscados the lista
 	 */
 	
-	public InfraccionesLocalizacion(double xcoor, double ycoor, String locat, int address, int street, IQueue<VOMovingViolations> lista) {
-		super(lista);
+	public InfraccionesLocalizacion(String xcoor, String ycoor, String locat, String address, String street, VOMovingViolations[] listaBuscados) {
+		super(listaBuscados);
 		xcoord = xcoor;
 		ycoord = ycoor;
 		location = locat;
@@ -48,7 +48,7 @@ public class InfraccionesLocalizacion extends EstadisticaInfracciones {
 	 *
 	 * @return the xcoord
 	 */
-	public double getXcoord() {
+	public String getXcoord() {
 		return xcoord;
 	}
 
@@ -58,7 +58,7 @@ public class InfraccionesLocalizacion extends EstadisticaInfracciones {
 	 *
 	 * @param xcoord the xcoord to set
 	 */
-	public void setXcoord(double xcoord) {
+	public void setXcoord(String xcoord) {
 		this.xcoord = xcoord;
 	}
 
@@ -68,7 +68,7 @@ public class InfraccionesLocalizacion extends EstadisticaInfracciones {
 	 *
 	 * @return the ycoord
 	 */
-	public double getYcoord() {
+	public String getYcoord() {
 		return ycoord;
 	}
 
@@ -78,7 +78,7 @@ public class InfraccionesLocalizacion extends EstadisticaInfracciones {
 	 *
 	 * @param ycoord the ycoord to set
 	 */
-	public void setYcoord(double ycoord) {
+	public void setYcoord(String ycoord) {
 		this.ycoord = ycoord;
 	}
 
@@ -88,7 +88,7 @@ public class InfraccionesLocalizacion extends EstadisticaInfracciones {
 	 *
 	 * @return the adressID
 	 */
-	public int getAdressID() {
+	public String getAdressID() {
 		return addressID;
 	}
 
@@ -98,7 +98,7 @@ public class InfraccionesLocalizacion extends EstadisticaInfracciones {
 	 *
 	 * @param adressID the adressID to set
 	 */
-	public void setAdressID(int adressID) {
+	public void setAdressID(String adressID) {
 		this.addressID = adressID;
 	}
 
@@ -108,7 +108,7 @@ public class InfraccionesLocalizacion extends EstadisticaInfracciones {
 	 *
 	 * @return the streetID
 	 */
-	public int getStreetID() {
+	public String getStreetID() {
 		return streetID;
 	}
 
@@ -118,7 +118,7 @@ public class InfraccionesLocalizacion extends EstadisticaInfracciones {
 	 *
 	 * @param streetID the streetID to set
 	 */
-	public void setStreetID(int pStreetID) {
+	public void setStreetID(String pStreetID) {
 		this.streetID = pStreetID;
 	}
 	

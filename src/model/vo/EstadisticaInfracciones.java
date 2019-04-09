@@ -1,6 +1,6 @@
 package model.vo;
 
-import model.data_structures.IQueue;
+
 
 /**
  * Agrupa las infracciones mostrando estadísticas sobre los datos 
@@ -47,7 +47,11 @@ public class EstadisticaInfracciones {
 	 * Lista con las infracciones que agrupa el conjunto
 	 */
 	
-	protected IQueue<VOMovingViolations> listaInfracciones;
+	protected VOMovingViolations[] listaInfracciones;
+	
+	private int accidente;
+	
+	private int noAccidente;
 	
 	
 	/**
@@ -55,14 +59,12 @@ public class EstadisticaInfracciones {
 	 * @param listaInfracciones - Lista con las infracciones que cumplen el criterio de agrupamiento
 	 */
 	
-	public EstadisticaInfracciones(IQueue<VOMovingViolations> lista) {
-		this.listaInfracciones = lista;
-		totalInfracciones = listaInfracciones.size();
-		
-		//TODO Hacer el calculo de porcentajeAccidentes, porcentajeNoAccidentes y valorTotal
-		porcentajeAccidentes = -50.0;   //TODO Calcular con base en la lista
-		porcentajeNoAccidentes = -50.0; //TODO Calcular con base en la lista
-		valorTotal = -100000.0;         //TODO Calcular con base en la lista
+	public EstadisticaInfracciones(VOMovingViolations[] listaBuscados) {
+		listaInfracciones = listaBuscados;
+		totalInfracciones = listaBuscados.length;
+		porcentajeAccidentes = getPorcentajeAccidentes(listaBuscados);   
+		porcentajeNoAccidentes = getPorcentajeNoAccidentes(listaBuscados); 
+		valorTotal = this.getValorTotal(listaBuscados);
 	}
 	
 	//=========================================================
@@ -71,6 +73,7 @@ public class EstadisticaInfracciones {
 	
 	/**
 	 * Gets the total infracciones.
+	 * @param lista 
 	 * @return the total infracciones
 	 */
 	
@@ -80,35 +83,55 @@ public class EstadisticaInfracciones {
 	
 	
 	/**
-	 * Gets the porcentaje accidentes.	 *
+	 * Gets the porcentaje accidentes.	 
+	 * @param pLista *
 	 * @return the porcentaje accidentes
 	 */
 	
-	public double getPorcentajeAccidentes() {
-		//TODO Completar para que calcule el porcentaje de las infracciones del conjunto que sufrieron accidentes
-		//con respecto al total.
+	public double getPorcentajeAccidentes(VOMovingViolations[] pLista) {
+		for(int i = 0; i<pLista.length;i++){
+			VOMovingViolations infraccion = pLista[i];
+			if(infraccion.getAccidentIndicator().equals("Yes")){
+				accidente++;
+			}
+		}
+		porcentajeAccidentes = (accidente*100)/pLista.length;
+		accidente=0;
 		return porcentajeAccidentes;
 	}	
 
 
 	/**
 	 * Gets the porcentaje no accidentes.
+	 * @param pLista 
 	 *
 	 * @return the porcentaje no accidentes
 	 */
-	public double getPorcentajeNoAccidentes() {
-		//TODO Completar para que calcule el porcentaje de las infracciones del conjunto que NO sufrieron accidentes
-		//con respecto al total.
+	public double getPorcentajeNoAccidentes(VOMovingViolations[] pLista) {
+		for(int i = 0; i<pLista.length;i++){
+			VOMovingViolations infraccion = pLista[i];
+			if(infraccion.getAccidentIndicator().equals("NO")){
+				noAccidente++;
+			}
+		}
+		porcentajeNoAccidentes = (noAccidente*100)/pLista.length;
+		noAccidente=0;
 		return porcentajeNoAccidentes;
 	}
 
 	/**
 	 * Gets the valor total.
+	 * @param pLista 
 	 *
 	 * @return the valor total
 	 */
-	public double getValorTotal() {
-		//TODO Completar para calcular el valor total de dinero que representan las infracciones
+	
+	public double getValorTotal(VOMovingViolations[] pLista) {
+		for(int i = 0; i<pLista.length;i++){
+			VOMovingViolations infraccion = pLista[i];
+			valorTotal+=Double.parseDouble(infraccion.getTotalPaid());
+			
+		}
 		return valorTotal;
 	}	
 
@@ -117,7 +140,7 @@ public class EstadisticaInfracciones {
 	 *
 	 * @return the lista infracciones
 	 */
-	public IQueue<VOMovingViolations> getListaInfracciones() {
+	public VOMovingViolations[] getListaInfracciones() {
 		return listaInfracciones;
 	}
 
@@ -127,7 +150,7 @@ public class EstadisticaInfracciones {
 	 * @param listaInfracciones the new lista infracciones
 	 */
 	
-	public void setListaInfracciones(IQueue<VOMovingViolations> listaInfracciones) {
-		this.listaInfracciones = listaInfracciones;
+	public void setListaInfracciones(VOMovingViolations[] pListaInfracciones) {
+		listaInfracciones = pListaInfracciones;
 	}
 }

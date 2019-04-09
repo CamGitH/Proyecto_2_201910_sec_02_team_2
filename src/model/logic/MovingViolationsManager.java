@@ -1,10 +1,13 @@
 package model.logic;
 
 import java.io.FileReader;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
+import java.util.Stack;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
@@ -24,6 +27,7 @@ import model.vo.InfraccionesFranjaHorariaViolationCode;
 import model.vo.InfraccionesLocalizacion;
 import model.vo.InfraccionesViolationCode;
 import model.vo.VOMovingViolations;
+
 
 public class MovingViolationsManager {
 
@@ -265,21 +269,27 @@ public class MovingViolationsManager {
 	{
 		int i = 0;
 		int j = 0;
-		VOMovingViolations[] listaTodos = null;
+		
+		VOMovingViolations[] listaTodos = {VOMovingViolations v = new};
 		VOMovingViolations[] listaBuscados = null;
+		
 		while(arbolRojoNegroCoordenadas.get(xCoord)!=null){
+			
 		VOMovingViolations infraccion = arbolRojoNegroCoordenadas.get(xCoord);
+		arbolRojoNegroCoordenadas.delete(xCoord);
 		listaTodos[i] = infraccion;
 		i++;
-		arbolRojoNegroCoordenadas.delete(xCoord);
+		
 		if((infraccion.getYCoord()+"").equals(yCoord)){
 			listaBuscados[j] = infraccion;
 			j++;
 		}
 		}
-		
-		
-		//InfraccionesLocalizacion info = new InfraccionesLocalizacion(xCoord, yCoord, locat, address, street, lista);
+		for(int k = 0; k<listaTodos.length;k++){
+			arbolRojoNegroCoordenadas.put(listaTodos[k].getXCoord()+"", listaTodos[k]);
+		}
+
+		InfraccionesLocalizacion info = new InfraccionesLocalizacion(xCoord, yCoord, listaBuscados[0].getLocation(), listaTodos[0].getAddressId(), listaBuscados[0].getStreetSegId(), listaBuscados);
 		return null;		
 	}
 	
