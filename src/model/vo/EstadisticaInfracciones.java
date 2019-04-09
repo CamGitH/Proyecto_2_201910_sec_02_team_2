@@ -1,6 +1,6 @@
 package model.vo;
 
-
+import model.data_structures.Queue;
 
 /**
  * Agrupa las infracciones mostrando estadísticas sobre los datos 
@@ -47,7 +47,7 @@ public class EstadisticaInfracciones {
 	 * Lista con las infracciones que agrupa el conjunto
 	 */
 	
-	protected VOMovingViolations[] listaInfracciones;
+	protected Queue<VOMovingViolations> listaInfracciones;
 	
 	private int accidente;
 	
@@ -59,9 +59,9 @@ public class EstadisticaInfracciones {
 	 * @param listaInfracciones - Lista con las infracciones que cumplen el criterio de agrupamiento
 	 */
 	
-	public EstadisticaInfracciones(VOMovingViolations[] listaBuscados) {
+	public EstadisticaInfracciones(Queue<VOMovingViolations> listaBuscados) {
 		listaInfracciones = listaBuscados;
-		totalInfracciones = listaBuscados.length;
+		totalInfracciones = listaBuscados.size();
 		porcentajeAccidentes = getPorcentajeAccidentes(listaBuscados);   
 		porcentajeNoAccidentes = getPorcentajeNoAccidentes(listaBuscados); 
 		valorTotal = this.getValorTotal(listaBuscados);
@@ -84,18 +84,19 @@ public class EstadisticaInfracciones {
 	
 	/**
 	 * Gets the porcentaje accidentes.	 
-	 * @param pLista *
+	 * @param listaBuscados *
 	 * @return the porcentaje accidentes
 	 */
 	
-	public double getPorcentajeAccidentes(VOMovingViolations[] pLista) {
-		for(int i = 0; i<pLista.length;i++){
-			VOMovingViolations infraccion = pLista[i];
+	public double getPorcentajeAccidentes(Queue<VOMovingViolations> listaBuscados) {
+		for(int i = 0; i<listaBuscados.size();i++){
+			VOMovingViolations infraccion = listaBuscados.dequeue();
 			if(infraccion.getAccidentIndicator().equals("Yes")){
 				accidente++;
 			}
+			listaBuscados.enqueue(infraccion);
 		}
-		porcentajeAccidentes = (accidente*100)/pLista.length;
+		porcentajeAccidentes = (accidente*100)/listaBuscados.size();
 		accidente=0;
 		return porcentajeAccidentes;
 	}	
@@ -103,33 +104,35 @@ public class EstadisticaInfracciones {
 
 	/**
 	 * Gets the porcentaje no accidentes.
-	 * @param pLista 
+	 * @param listaBuscados 
 	 *
 	 * @return the porcentaje no accidentes
 	 */
-	public double getPorcentajeNoAccidentes(VOMovingViolations[] pLista) {
-		for(int i = 0; i<pLista.length;i++){
-			VOMovingViolations infraccion = pLista[i];
+	public double getPorcentajeNoAccidentes(Queue<VOMovingViolations> listaBuscados) {
+		for(int i = 0; i<listaBuscados.size();i++){
+			VOMovingViolations infraccion = listaBuscados.dequeue();
 			if(infraccion.getAccidentIndicator().equals("NO")){
 				noAccidente++;
 			}
+			listaBuscados.enqueue(infraccion);
 		}
-		porcentajeNoAccidentes = (noAccidente*100)/pLista.length;
+		porcentajeNoAccidentes = (noAccidente*100)/listaBuscados.size();
 		noAccidente=0;
 		return porcentajeNoAccidentes;
 	}
 
 	/**
 	 * Gets the valor total.
-	 * @param pLista 
+	 * @param listaBuscados 
 	 *
 	 * @return the valor total
 	 */
 	
-	public double getValorTotal(VOMovingViolations[] pLista) {
-		for(int i = 0; i<pLista.length;i++){
-			VOMovingViolations infraccion = pLista[i];
+	public double getValorTotal(Queue<VOMovingViolations> listaBuscados) {
+		for(int i = 0; i<listaBuscados.size();i++){
+			VOMovingViolations infraccion = listaBuscados.dequeue();
 			valorTotal+=Double.parseDouble(infraccion.getTotalPaid());
+			listaBuscados.enqueue(infraccion);
 			
 		}
 		return valorTotal;
@@ -140,7 +143,7 @@ public class EstadisticaInfracciones {
 	 *
 	 * @return the lista infracciones
 	 */
-	public VOMovingViolations[] getListaInfracciones() {
+	public Queue<VOMovingViolations> getListaInfracciones() {
 		return listaInfracciones;
 	}
 
@@ -150,7 +153,7 @@ public class EstadisticaInfracciones {
 	 * @param listaInfracciones the new lista infracciones
 	 */
 	
-	public void setListaInfracciones(VOMovingViolations[] pListaInfracciones) {
+	public void setListaInfracciones(Queue<VOMovingViolations> pListaInfracciones) {
 		listaInfracciones = pListaInfracciones;
 	}
 }

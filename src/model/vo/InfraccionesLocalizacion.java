@@ -32,7 +32,7 @@ public class InfraccionesLocalizacion extends EstadisticaInfracciones {
 	 * @param listaBuscados the lista
 	 */
 	
-	public InfraccionesLocalizacion(String xcoor, String ycoor, String locat, String address, String street, VOMovingViolations[] listaBuscados) {
+	public InfraccionesLocalizacion(String xcoor, String ycoor, String locat, String address, String street, model.data_structures.Queue<VOMovingViolations> listaBuscados) {
 		super(listaBuscados);
 		xcoord = xcoor;
 		ycoord = ycoor;

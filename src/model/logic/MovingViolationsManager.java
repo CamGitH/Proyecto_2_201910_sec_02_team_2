@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 import java.util.Stack;
 
 import com.opencsv.CSVReader;
@@ -18,6 +17,7 @@ import model.data_structures.HashTable;
 import model.data_structures.IQueue;
 import model.data_structures.LinkedList;
 import model.data_structures.NodoLinkedList;
+import model.data_structures.Queue;
 import model.vo.EstadisticaInfracciones;
 import model.vo.EstadisticasCargaInfracciones;
 import model.vo.InfraccionesFecha;
@@ -267,30 +267,37 @@ public class MovingViolationsManager {
 	  */
 	public InfraccionesLocalizacion consultarPorLocalizacionArbol(String xCoord, String yCoord)
 	{
-		int i = 0;
-		int j = 0;
 		
-		VOMovingViolations[] listaTodos = {VOMovingViolations v = new};
-		VOMovingViolations[] listaBuscados = null;
+		String location = "";
+		String address = "";
+		String streetSeg = "";
+		
+		Queue<VOMovingViolations> listaTodos = new Queue<>();
+		Queue<VOMovingViolations> listaBuscados = new Queue<>();
 		
 		while(arbolRojoNegroCoordenadas.get(xCoord)!=null){
 			
 		VOMovingViolations infraccion = arbolRojoNegroCoordenadas.get(xCoord);
 		arbolRojoNegroCoordenadas.delete(xCoord);
-		listaTodos[i] = infraccion;
-		i++;
+		listaTodos.enqueue(infraccion);
 		
 		if((infraccion.getYCoord()+"").equals(yCoord)){
-			listaBuscados[j] = infraccion;
-			j++;
+			listaBuscados.enqueue(infraccion);
+			location = infraccion.getLocation();
+			address = infraccion.getAddressId();
+			streetSeg = infraccion.getStreetSegId();
+			
 		}
+		
 		}
-		for(int k = 0; k<listaTodos.length;k++){
-			arbolRojoNegroCoordenadas.put(listaTodos[k].getXCoord()+"", listaTodos[k]);
+		
+		for(int i = 0; i<listaTodos.size();i++){
+			VOMovingViolations infra = listaTodos.dequeue();
+			arbolRojoNegroCoordenadas.put(infra.getXCoord()+"", infra);
 		}
 
-		InfraccionesLocalizacion info = new InfraccionesLocalizacion(xCoord, yCoord, listaBuscados[0].getLocation(), listaTodos[0].getAddressId(), listaBuscados[0].getStreetSegId(), listaBuscados);
-		return null;		
+		InfraccionesLocalizacion info = new InfraccionesLocalizacion(xCoord, yCoord, location, address, streetSeg, listaBuscados);
+		return info;		
 	}
 	
 	/**
