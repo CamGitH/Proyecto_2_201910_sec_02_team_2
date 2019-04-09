@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
@@ -34,7 +35,7 @@ public class MovingViolationsManager {
 		//Lista Encadenada
 		private LinkedList<VOMovingViolations> listaEncadenada;
 		//Arbol Rojo Negro
-		private ArbolRojoN<String, VOMovingViolations> arbolRojoNegroCoordenadas;
+		private ArbolRojoN<String, VOMovingViolations> arbolRojoNegro;
 		//ColaPrioridad
 		private ColaPrioridadHeap<VOMovingViolations> colaPrioridad;
 		//HashTable
@@ -46,7 +47,7 @@ public class MovingViolationsManager {
 	public MovingViolationsManager()
 	{
 		listaEncadenada = new LinkedList<>();
-		arbolRojoNegroCoordenadas = new ArbolRojoN<>();
+		arbolRojoNegro = new ArbolRojoN<>();
 		colaPrioridad = new ColaPrioridadHeap<>();
 		hashTable = new HashTable<>();
 	}
@@ -201,7 +202,7 @@ public class MovingViolationsManager {
 
 		
 			listaEncadenada.agregarIni(infraccion);
-			arbolRojoNegroCoordenadas.put(infraccion.getXCoord()+"", infraccion);
+			arbolRojoNegro.put(infraccion.objectId()+"", infraccion);
 
 		}
 		System.out.println(listaEncadenada.darPrimero().darElemento().toString());
@@ -251,11 +252,24 @@ public class MovingViolationsManager {
 	  * @param  int N: Numero de los tipos de ViolationCode con más infracciones.
 	  * @return Cola con objetos InfraccionesViolationCode con top N infracciones
 	  */
-	public IQueue<InfraccionesViolationCode> rankingNViolationCodes(int N)
+	public ColaPrioridadHeap<InfraccionesViolationCode> rankingNViolationCodes(int N)
 	{
-		// TODO completar
-		return null;		
-	}
+		
+		String violationCodeP = "";
+
+		ColaPrioridadHeap<InfraccionesViolationCode> listaBuscados = new ColaPrioridadHeap<InfraccionesViolationCode>();
+		//TODO crear el ordenamiento
+		MergeSort(listaEncadenada, VOMovingViolations.ViolationCode);
+		NodoLinkedList<VOMovingViolations> infraccion = listaEncadenada.darPrimero();
+		while(infraccion.darSiguiente()!=null){
+			//TODO crear el atributo
+			while(infraccion.darSiguiente().darElemento().getViolationCode().equals(infraccion.darElemento().getViolationCode))
+			InfraccionesViolationCode info = new InfraccionesViolationCode(violationCodeP, listaBuscados);
+			
+		}
+		return listaBuscados;		
+		}	
+	
 
 	
 	/**
@@ -272,33 +286,24 @@ public class MovingViolationsManager {
 		String address = "";
 		String streetSeg = "";
 		
-		Queue<VOMovingViolations> listaTodos = new Queue<>();
+
 		Queue<VOMovingViolations> listaBuscados = new Queue<>();
 		
-		while(arbolRojoNegroCoordenadas.get(xCoord)!=null){
-			
-		VOMovingViolations infraccion = arbolRojoNegroCoordenadas.get(xCoord);
-		arbolRojoNegroCoordenadas.delete(xCoord);
-		listaTodos.enqueue(infraccion);
-		
-		if((infraccion.getYCoord()+"").equals(yCoord)){
-			listaBuscados.enqueue(infraccion);
-			location = infraccion.getLocation();
-			address = infraccion.getAddressId();
-			streetSeg = infraccion.getStreetSegId();
-			
+		Iterable<String> iterable = arbolRojoNegro.keys();
+		for(String s: iterable){
+			VOMovingViolations infraccion = arbolRojoNegro.get(Integer.parseInt(s)+"");
+			if((infraccion.getYCoord()+"").equals(yCoord) && (infraccion.getXCoord()+"").equals(xCoord)){
+				listaBuscados.enqueue(infraccion);
+				location = infraccion.getLocation();
+				address = infraccion.getAddressId();
+				streetSeg = infraccion.getStreetSegId();
+				
+			}
 		}
-		
-		}
-		
-		for(int i = 0; i<listaTodos.size();i++){
-			VOMovingViolations infra = listaTodos.dequeue();
-			arbolRojoNegroCoordenadas.put(infra.getXCoord()+"", infra);
-		}
-
 		InfraccionesLocalizacion info = new InfraccionesLocalizacion(xCoord, yCoord, location, address, streetSeg, listaBuscados);
 		return info;		
-	}
+		}
+		
 	
 	/**
 	  * Requerimiento 3B: Buscar las franjas de fecha-hora donde se tiene un valor acumulado

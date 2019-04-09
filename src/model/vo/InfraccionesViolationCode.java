@@ -1,5 +1,6 @@
 package model.vo;
 
+import model.data_structures.ColaPrioridadHeap;
 import model.data_structures.IQueue;
 
 /**
@@ -7,7 +8,7 @@ import model.data_structures.IQueue;
  * de las respectivas infracciones que poseen el código en mención.
  */
 
-public class InfraccionesViolationCode extends EstadisticaInfracciones{
+public class InfraccionesViolationCode extends EstadisticaInfracciones implements Comparable<InfraccionesViolationCode>{
 	
 	@Override
 	public String toString() {
@@ -27,7 +28,8 @@ public class InfraccionesViolationCode extends EstadisticaInfracciones{
 	 * @param lista Lista de infracciones que poseen el mismo ViolationCode
 	 */
 	
-	public InfraccionesViolationCode(String violationCodeP, IQueue<VOMovingViolations> lista) {
+	public InfraccionesViolationCode(String violationCodeP, ColaPrioridadHeap<InfraccionesViolationCode> lista) {
+		
 		super(lista);
 		this.violationCode = violationCodeP;
 	}
@@ -40,5 +42,12 @@ public class InfraccionesViolationCode extends EstadisticaInfracciones{
 	
 	public String getViolationCode() {
 		return violationCode;
+	}
+
+
+	@Override
+	public int compareTo(InfraccionesViolationCode o) {
+		// TODO Auto-generated method stub
+		return 0;
 	}	
 }
