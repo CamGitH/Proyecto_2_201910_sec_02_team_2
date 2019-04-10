@@ -256,10 +256,8 @@ public class MovingViolationsManager {
 	public Queue<InfraccionesViolationCode> rankingNViolationCodes(int N)
 	{
 
-		String violationCodeP = "";
-		Queue<InfraccionesViolationCode> listaFinal = new Queue<>();
-		Queue<VOMovingViolations> cola = new Queue<>();
-		InfraccionesViolationCode infracciones = null;
+		Queue<InfraccionesViolationCode> listaFinal = new Queue<InfraccionesViolationCode>();
+		Queue<VOMovingViolations> cola = new Queue<VOMovingViolations>();
 
 		ColaPrioridadHeap<VOMovingViolations> colaOrdenamiento = new ColaPrioridadHeap<VOMovingViolations>();
 		ColaPrioridadHeap<InfraccionesViolationCode> colaPrioridad = new ColaPrioridadHeap<InfraccionesViolationCode>();
@@ -269,37 +267,37 @@ public class MovingViolationsManager {
 			VOMovingViolations infraccion = arbolRojoNegro.get(Integer.parseInt(s)+"");
 			colaOrdenamiento.insert(infraccion);
 		}
-		
-		VOMovingViolations infraccion = colaOrdenamiento.delMax();
-		
+
+		ArrayList<VOMovingViolations> arreglo = new ArrayList<VOMovingViolations>();
 		for(int i = 0; i<colaOrdenamiento.size();i++){
-			
-			VOMovingViolations infraccion2 = colaOrdenamiento.delMax();
-			
-			while((infraccion.getViolationCode().equals(infraccion2.getViolationCode()))){
-				cola.enqueue(infraccion);
-				violationCodeP = infraccion.getViolationCode()+"";
+			arreglo.add(colaOrdenamiento.delMax());
+		}
+		VOMovingViolations infraccion = arreglo.get(0);
+		VOMovingViolations infraccion2 = arreglo.get(1);
+
+		for(int i = 2; i<arreglo.size();i++){
+
+			cola.enqueue(infraccion);
+			String codigo = infraccion.getViolationCode();
+
+			while(infraccion.getViolationCode().equals(infraccion2.getViolationCode())){
+				cola.enqueue(infraccion2);
 				infraccion=infraccion2;
-				infraccion2=colaOrdenamiento.delMax();
-				i++;
-			}
-	
-			if(cola.size()>0){
-			infracciones = new InfraccionesViolationCode(violationCodeP, cola);
-			colaPrioridad.insert(infracciones);
-			}
-			
-			
-			for (int j = 0; j<cola.size();j++){
-				cola.dequeue();
+				infraccion2=arreglo.get(i);
 			}
 
-			
+			InfraccionesViolationCode infracciones = new InfraccionesViolationCode(codigo, cola);
+			colaPrioridad.insert(infracciones);
+			for (int j = 0; j<cola.size();j++){
+				cola.dequeue();
+
+			}
+
 		}
 		for(int k=0;k<N;k++){
 			listaFinal.enqueue(colaPrioridad.delMax());
 		}
-		
+
 		return listaFinal;		
 	}	
 
@@ -313,10 +311,10 @@ public class MovingViolationsManager {
 		String fin;
 		String n = Integer.toString(s);
 		String[]nn=n.split("-");
-		
+
 		ini=nn[1];
 		fin=nn[2];
-		
+
 		if(fin=="24:00:00") {
 			fin ="00:00:00";
 		}
@@ -328,11 +326,11 @@ public class MovingViolationsManager {
 		int postgSinAccidentes =0;
 		int postgConAccidentes =0;
 		int valortotal =0;
-		
+
 		intervalo = Integer.parseInt(fin)-Integer.parseInt(ini);
-		
+
 		Queue<VOMovingViolations> lista = new Queue<>();
-		
+
 		Iterable<String> iterable = arbolRojoNegro.keys();
 		for(String s: iterable){
 			VOMovingViolations infraccion = arbolRojoNegro.get(Integer.parseInt(s)+"");
@@ -346,20 +344,20 @@ public class MovingViolationsManager {
 					postgConAccidentes++;
 				}
 				valortotal = valortotal+ Integer.parseInt(infraccion.getTotalPaid());
-				
-					lista.enqueue(infraccion);
-		}
+
+				lista.enqueue(infraccion);
 			}
-			
-					
+		}
+
+
 		postgConAccidentes= (postgConAccidentes*100)/totalDeInf;
 		postgSinAccidentes= (postgSinAccidentes*100)/totalDeInf;
-//		return "El intervalo recorre una cantidad total de:  "+intervalo+" horas. Con un total de: "+ totalDeInf +" de "
-//				+ "infracciones. El porcentage de infracciones sin accidentes es del "+ postgSinAccidentes+"% mientas que "
-//				+ "el porcentage de infracciones sin accidentes es de "+ postgSinAccidentes+"%. Y el valot total a pagar "
-//				+ "por las infracciones es de "+ valortotal ;
+		//		return "El intervalo recorre una cantidad total de:  "+intervalo+" horas. Con un total de: "+ totalDeInf +" de "
+		//				+ "infracciones. El porcentage de infracciones sin accidentes es del "+ postgSinAccidentes+"% mientas que "
+		//				+ "el porcentage de infracciones sin accidentes es de "+ postgSinAccidentes+"%. Y el valot total a pagar "
+		//				+ "por las infracciones es de "+ valortotal ;
 		return lista;
-		}
+	}
 
 	/**
 	 * Requerimiento 2B: Consultar las  infracciones  por  
