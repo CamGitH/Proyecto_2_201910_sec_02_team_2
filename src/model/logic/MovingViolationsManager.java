@@ -219,7 +219,7 @@ public class MovingViolationsManager {
 	 */
 	public IQueue<InfraccionesFranjaHoraria> rankingNFranjas(int N)
 	{
-		return (IQueue<InfraccionesFranjaHoraria>) porFranjasHorarias(N);
+		return  porFranjasHorarias(N);
 	}
 
 	/**
@@ -231,8 +231,9 @@ public class MovingViolationsManager {
 	 */
 	public InfraccionesLocalizacion consultarPorLocalizacionHash(double xCoord, double yCoord)
 	{
-		// TODO completar
-		return null;		
+		String x = Double.toString(xCoord);
+		String y = Double.toString(yCoord);
+		return ordenarPorLocGeo(x, y);
 	}
 
 	/**
@@ -307,7 +308,7 @@ public class MovingViolationsManager {
 	 * 1A- Obtener el ranking de las N franjas horarias que tengan más infracciones. 
 	 * El valor N es un dato de entrada. Se define las franjas horarias válidas
 	 */
-	public InfraccionesFranjaHoraria porFranjasHorarias(int s)
+	public IQueue<InfraccionesFranjaHoraria> porFranjasHorarias(int s)
 	{
 		String ini;
 		String fin;
@@ -334,8 +335,8 @@ public class MovingViolationsManager {
 		Queue<VOMovingViolations> lista = new Queue<>();
 		
 		Iterable<String> iterable = arbolRojoNegro.keys();
-		for(String s: iterable){
-			VOMovingViolations infraccion = arbolRojoNegro.get(Integer.parseInt(s)+"");
+		for(String c: iterable){
+			VOMovingViolations infraccion = arbolRojoNegro.get(Integer.parseInt(c)+"");
 			if((infraccion.getTicketIssueDate()+"").compareTo(fin)<0 && (infraccion.getTicketIssueDate()+"").compareTo(ini)>0){
 				totalDeInf++;
 				//Si la fecha tiene año esto no va a funcionar
@@ -361,6 +362,64 @@ public class MovingViolationsManager {
 		return lista;
 		}
 
+	
+	/*
+	 * 2A- Realizar el ordenamiento de las infracciones por Localización Geográfica (Xcoord,Ycoord). 
+	 */
+	public InfraccionesLocalizacion ordenarPorLocGeo (String xCoord, String yCoord) {
+		
+		String location = "";
+		String address = "";
+		String street = "";
+
+		Queue<VOMovingViolations> listaBuscados = new Queue<>();
+
+		Iterable<String> iterable = arbolRojoNegro.keys();
+		for(String s: iterable){
+			VOMovingViolations infraccion = arbolRojoNegro.get(Integer.parseInt(s)+"");
+			if((infraccion.getXCoord()+"").equals(xCoord) && (infraccion.getYCoord()+"").equals(yCoord)){
+				
+				location = infraccion.getLocation();
+				address = infraccion.getAddressId();
+				street = infraccion.getStreetSegId();
+				listaBuscados.enqueue(infraccion);
+			}
+		}
+		InfraccionesLocalizacion info = new InfraccionesLocalizacion(xCoord, yCoord, location, address, street, listaBuscados);
+		return info;		
+	}
+	
+	
+	/*
+	 * 3A- Buscar las infracciones por rango de fechas 
+	 * [Fecha Inicial (Año/Mes/Día), Fecha Final(Año/Mes/Día)]. 
+	 */
+	public IQueue<InfraccionesFecha> infraccionesPorRangFecha(LocalDate fechaInicial, LocalDate fechaFinal) {
+
+		String location = "";
+		String address = "";
+		String street = "";
+
+		Queue<VOMovingViolations> listaBuscados = new Queue<>();
+
+		Iterable<String> iterable = arbolRojoNegro.keys();
+		for(String s: iterable){
+			VOMovingViolations infraccion = arbolRojoNegro.get(Integer.parseInt(s)+"");
+			if((infraccion.getXCoord()+"").equals(1) && (infraccion.getYCoord()+"").equals(1)){
+				
+				location = infraccion.getLocation();
+				address = infraccion.getAddressId();
+				street = infraccion.getStreetSegId();
+				listaBuscados.enqueue(infraccion);
+		
+			}
+			
+			return null;		
+		}
+		
+		
+		
+		
 	/**
 	 * Requerimiento 2B: Consultar las  infracciones  por  
 	 * Localización  Geográfica  (Xcoord, Ycoord) en Arbol.
