@@ -44,6 +44,9 @@ public class ColaPrioridadHeap <T extends Comparable<T>>{
     private boolean isEmpty(){
         return N == 0;
     }
+    public int size(){
+    	return N;
+    }
     private void resize(int capacity){
         T[] copy = (T[]) new Comparable[capacity];
         for(int i = 1; i <= N; i ++ )

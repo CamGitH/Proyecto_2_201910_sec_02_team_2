@@ -18,11 +18,12 @@ public class VOMovingViolations  implements Comparable<VOMovingViolations>{
 	private String addressID;
 	private double xCoord;
 	private double yCoord;
+	private String violationCode;
 	
 
 	public VOMovingViolations(int pObjectID, String pLocation, String pTicketIssueDate, String pTotalPaid,
 			String pAccidentIndicator, String pViolatinDescription, String pStreetSegId, String pAddressID
-			, double pXCoord, double pYCoord) {
+			, double pXCoord, double pYCoord, String pViolationCode) {
 	
 		objectID = pObjectID;
 		location = pLocation;
@@ -34,6 +35,7 @@ public class VOMovingViolations  implements Comparable<VOMovingViolations>{
 		addressID = pAddressID;
 		xCoord = pXCoord;
 		yCoord = pYCoord;
+		violationCode = pViolationCode;
 		
 	}
 
@@ -108,6 +110,9 @@ public class VOMovingViolations  implements Comparable<VOMovingViolations>{
 	public double getYCoord() {
 		return yCoord;
 	}
+	public String getViolationCode() {
+		return violationCode;
+	}
 	
 	public static class TicketIssueDate implements Comparator<VOMovingViolations>{
 
@@ -122,7 +127,7 @@ public class VOMovingViolations  implements Comparable<VOMovingViolations>{
 //
 //		@Override
 //		public int compare(VOMovingViolations object1, VOMovingViolations object2) {
-//			return object1.objectId().compareToIgnoreCase(object2.objectId());
+//			return object1.objectId().compareTo(object2.objectId());
 //		}
 //		
 //	}
@@ -176,14 +181,16 @@ public class VOMovingViolations  implements Comparable<VOMovingViolations>{
 
 		@Override
 		public int compare(VOMovingViolations object1, VOMovingViolations object2) {
-			return object2.getViolationDescription().compareToIgnoreCase(object1.getViolationDescription());
+			
+			 return object1.getViolationCode().compareToIgnoreCase(object2.getViolationCode());
+			 
+		
 		}
 		
 	}
 
 	@Override
 	public int compareTo(VOMovingViolations arg0) {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.getViolationCode().compareToIgnoreCase(arg0.getViolationCode());
 	}
 }

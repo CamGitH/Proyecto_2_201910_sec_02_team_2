@@ -105,12 +105,9 @@ public class Controller {
 			case 4:
 				view.printMessage("1B. Consultar los N Tipos con mas infracciones. Ingrese el valor de N: ");
 				int numeroTipos = sc.nextInt();
-
-				//TODO Completar para la invocación del metodo 1B				
-				//model.rankingNViolationCodes(int N)
 				
-				//TODO Mostrar resultado de tipo Cola con N InfraccionesViolationCode
-				//view.printReq1B( ... )
+				Queue<InfraccionesViolationCode> cola = model.rankingNViolationCodes(numeroTipos);
+				view.printReq1B(cola);
 				break;
 
 			case 5:						

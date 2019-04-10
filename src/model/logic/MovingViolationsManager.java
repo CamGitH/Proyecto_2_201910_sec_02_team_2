@@ -17,8 +17,10 @@ import model.data_structures.ColaPrioridadHeap;
 import model.data_structures.HashTable;
 import model.data_structures.IQueue;
 import model.data_structures.LinkedList;
+import model.data_structures.Nodo;
 import model.data_structures.NodoLinkedList;
 import model.data_structures.Queue;
+import model.sort.Sort;
 import model.vo.EstadisticaInfracciones;
 import model.vo.EstadisticasCargaInfracciones;
 import model.vo.InfraccionesFecha;
@@ -32,15 +34,15 @@ import model.vo.VOMovingViolations;
 
 public class MovingViolationsManager {
 
-		//Lista Encadenada
-		private LinkedList<VOMovingViolations> listaEncadenada;
-		//Arbol Rojo Negro
-		private ArbolRojoN<String, VOMovingViolations> arbolRojoNegro;
-		//ColaPrioridad
-		private ColaPrioridadHeap<VOMovingViolations> colaPrioridad;
-		//HashTable
-		private HashTable<Integer, VOMovingViolations> hashTable;
-	
+	//Lista Encadenada
+	private LinkedList<VOMovingViolations> listaEncadenada;
+	//Arbol Rojo Negro
+	private ArbolRojoN<String, VOMovingViolations> arbolRojoNegro;
+	//ColaPrioridad
+	private ColaPrioridadHeap<VOMovingViolations> colaPrioridad;
+	//HashTable
+	private HashTable<Integer, VOMovingViolations> hashTable;
+
 	/**
 	 * Metodo constructor
 	 */
@@ -51,7 +53,7 @@ public class MovingViolationsManager {
 		colaPrioridad = new ColaPrioridadHeap<>();
 		hashTable = new HashTable<>();
 	}
-	
+
 	/**
 	 * Cargar las infracciones de un semestre de 2018
 	 * @param numeroSemestre numero del semestre a cargar (1 o 2)
@@ -166,16 +168,16 @@ public class MovingViolationsManager {
 		}
 
 		String[] infraccionesPorMes = {
-		uno+" datos cargados en "+u+"."
-		,dos+" datos cargados en "+d+"."
-		,tres+" datos cargados en "+t+"."
-		,cuatro+" datos cargados en "+c+"."
-		,s+ " datos cargados en "+i+"."
-		,ss+" datos cargados en "+e+"."};
-		
+				uno+" datos cargados en "+u+"."
+				,dos+" datos cargados en "+d+"."
+				,tres+" datos cargados en "+t+"."
+				,cuatro+" datos cargados en "+c+"."
+				,s+ " datos cargados en "+i+"."
+				,ss+" datos cargados en "+e+"."};
+
 		//TODO buscar min coord y max coord para X y Y. Y meterlo en las estadisticas como un arreglo de double[]
 		double[] prueba = {1,2,3,4};	
-		
+
 		EstadisticasCargaInfracciones stat = 
 				new EstadisticasCargaInfracciones(listaEncadenada.getSize(), 6, infraccionesPorMes, prueba);
 
@@ -185,7 +187,7 @@ public class MovingViolationsManager {
 
 	public void readFiles(List<String[]> list){
 
-		
+
 		for(int i = 0;i<list.size()/10;i++){
 
 			VOMovingViolations infraccion = new VOMovingViolations(
@@ -198,97 +200,129 @@ public class MovingViolationsManager {
 					list.get(i)[4],
 					list.get(i)[3],
 					Double.parseDouble(list.get(i)[5]),
-					Double.parseDouble(list.get(i)[6]));  
+					Double.parseDouble(list.get(i)[6]),
+					list.get(i)[14]);  
 
-		
+
+
 			listaEncadenada.agregarIni(infraccion);
 			arbolRojoNegro.put(infraccion.objectId()+"", infraccion);
 
 		}
-		System.out.println(listaEncadenada.darPrimero().darElemento().toString());
 
 	}
 
 	/**
-	  * Requerimiento 1A: Obtener el ranking de las N franjas horarias
-	  * que tengan más infracciones. 
-	  * @param int N: Número de franjas horarias que tienen más infracciones
-	  * @return Cola con objetos InfraccionesFranjaHoraria
-	  */
+	 * Requerimiento 1A: Obtener el ranking de las N franjas horarias
+	 * que tengan más infracciones. 
+	 * @param int N: Número de franjas horarias que tienen más infracciones
+	 * @return Cola con objetos InfraccionesFranjaHoraria
+	 */
 	public IQueue<InfraccionesFranjaHoraria> rankingNFranjas(int N)
 	{
 		// TODO completar
 		return null;		
 	}
-	
+
 	/**
-	  * Requerimiento 2A: Consultar  las  infracciones  por
-	  * Localización  Geográfica  (Xcoord, Ycoord) en Tabla Hash.
-	  * @param  double xCoord : Coordenada X de la localizacion de la infracción
-	  *			double yCoord : Coordenada Y de la localizacion de la infracción
-	  * @return Objeto InfraccionesLocalizacion
-	  */
+	 * Requerimiento 2A: Consultar  las  infracciones  por
+	 * Localización  Geográfica  (Xcoord, Ycoord) en Tabla Hash.
+	 * @param  double xCoord : Coordenada X de la localizacion de la infracción
+	 *			double yCoord : Coordenada Y de la localizacion de la infracción
+	 * @return Objeto InfraccionesLocalizacion
+	 */
 	public InfraccionesLocalizacion consultarPorLocalizacionHash(double xCoord, double yCoord)
 	{
 		// TODO completar
 		return null;		
 	}
-	
+
 	/**
-	  * Requerimiento 3A: Buscar las infracciones por rango de fechas
-	  * @param  LocalDate fechaInicial: Fecha inicial del rango de búsqueda
-	  * 		LocalDate fechaFinal: Fecha final del rango de búsqueda
-	  * @return Cola con objetos InfraccionesFecha
-	  */
+	 * Requerimiento 3A: Buscar las infracciones por rango de fechas
+	 * @param  LocalDate fechaInicial: Fecha inicial del rango de búsqueda
+	 * 		LocalDate fechaFinal: Fecha final del rango de búsqueda
+	 * @return Cola con objetos InfraccionesFecha
+	 */
 	public IQueue<InfraccionesFecha> consultarInfraccionesPorRangoFechas(LocalDate fechaInicial, LocalDate fechaFinal)
 	{
 		// TODO completar
 		return null;		
 	}
-	
-	/**
-	  * Requerimiento 1B: Obtener  el  ranking  de  las  N  tipos  de  infracción
-	  * (ViolationCode)  que  tengan  más infracciones.
-	  * @param  int N: Numero de los tipos de ViolationCode con más infracciones.
-	  * @return Cola con objetos InfraccionesViolationCode con top N infracciones
-	  */
-	public ColaPrioridadHeap<InfraccionesViolationCode> rankingNViolationCodes(int N)
-	{
-		
-		String violationCodeP = "";
 
-		ColaPrioridadHeap<InfraccionesViolationCode> listaBuscados = new ColaPrioridadHeap<InfraccionesViolationCode>();
-		//TODO crear el ordenamiento
-		MergeSort(listaEncadenada, VOMovingViolations.ViolationCode);
-		NodoLinkedList<VOMovingViolations> infraccion = listaEncadenada.darPrimero();
-		while(infraccion.darSiguiente()!=null){
-			//TODO crear el atributo
-			while(infraccion.darSiguiente().darElemento().getViolationCode().equals(infraccion.darElemento().getViolationCode))
-			InfraccionesViolationCode info = new InfraccionesViolationCode(violationCodeP, listaBuscados);
+	/**
+	 * Requerimiento 1B: Obtener  el  ranking  de  las  N  tipos  de  infracción
+	 * (ViolationCode)  que  tengan  más infracciones.
+	 * @param  int N: Numero de los tipos de ViolationCode con más infracciones.
+	 * @return Cola con objetos InfraccionesViolationCode con top N infracciones
+	 */
+	public Queue<InfraccionesViolationCode> rankingNViolationCodes(int N)
+	{
+
+		String violationCodeP = "";
+		Queue<InfraccionesViolationCode> listaFinal = new Queue<>();
+		Queue<VOMovingViolations> cola = new Queue<>();
+		InfraccionesViolationCode infracciones = null;
+
+		ColaPrioridadHeap<VOMovingViolations> colaOrdenamiento = new ColaPrioridadHeap<>();
+		ColaPrioridadHeap<InfraccionesViolationCode> colaPrioridad = new ColaPrioridadHeap<InfraccionesViolationCode>();
+
+		Iterable<String> iterable = arbolRojoNegro.keys();
+		for(String s: iterable){
+			VOMovingViolations infraccion = arbolRojoNegro.get(Integer.parseInt(s)+"");
+			colaOrdenamiento.insert(infraccion);
+		}
+		
+		VOMovingViolations infraccion = colaOrdenamiento.delMax();
+		
+		for(int i = 0; i<colaOrdenamiento.size();i++){
+			
+			VOMovingViolations infraccion2 = colaOrdenamiento.delMax();
+			
+			while((infraccion.getViolationCode().equals(infraccion2.getViolationCode())&&infraccion2!=null)){
+				cola.enqueue(infraccion);
+				violationCodeP = infraccion.getViolationCode()+"";
+				infraccion=infraccion2;
+				infraccion2=colaOrdenamiento.delMax();
+				i++;
+			}
+	
+			if(!cola.isEmpty()){
+			infracciones = new InfraccionesViolationCode(violationCodeP, cola);
+			colaPrioridad.insert(infracciones);
+			}
+			
+			for (int j = 0; j<cola.size();j++){
+				cola.dequeue();
+			}
+
 			
 		}
-		return listaBuscados;		
-		}	
-	
+		for(int k=0;k<N;k++){
+			listaFinal.enqueue(colaPrioridad.delMax());
+		}
+		
+		return listaFinal;		
+	}	
 
-	
+
+
 	/**
-	  * Requerimiento 2B: Consultar las  infracciones  por  
-	  * Localización  Geográfica  (Xcoord, Ycoord) en Arbol.
-	  * @param  double xCoord : Coordenada X de la localizacion de la infracción
-	  *			double yCoord : Coordenada Y de la localizacion de la infracción
-	  * @return Objeto InfraccionesLocalizacion
-	  */
+	 * Requerimiento 2B: Consultar las  infracciones  por  
+	 * Localización  Geográfica  (Xcoord, Ycoord) en Arbol.
+	 * @param  double xCoord : Coordenada X de la localizacion de la infracción
+	 *			double yCoord : Coordenada Y de la localizacion de la infracción
+	 * @return Objeto InfraccionesLocalizacion
+	 */
 	public InfraccionesLocalizacion consultarPorLocalizacionArbol(String xCoord, String yCoord)
 	{
-		
+
 		String location = "";
 		String address = "";
 		String streetSeg = "";
-		
+
 
 		Queue<VOMovingViolations> listaBuscados = new Queue<>();
-		
+
 		Iterable<String> iterable = arbolRojoNegro.keys();
 		for(String s: iterable){
 			VOMovingViolations infraccion = arbolRojoNegro.get(Integer.parseInt(s)+"");
@@ -297,74 +331,76 @@ public class MovingViolationsManager {
 				location = infraccion.getLocation();
 				address = infraccion.getAddressId();
 				streetSeg = infraccion.getStreetSegId();
-				
+
 			}
 		}
 		InfraccionesLocalizacion info = new InfraccionesLocalizacion(xCoord, yCoord, location, address, streetSeg, listaBuscados);
 		return info;		
-		}
-		
-	
+	}
+
+
 	/**
-	  * Requerimiento 3B: Buscar las franjas de fecha-hora donde se tiene un valor acumulado
-	  * de infracciones en un rango dado [US$ valor inicial, US$ valor final]. 
-	  * @param  double valorInicial: Valor mínimo acumulado de las infracciones
-	  * 		double valorFinal: Valor máximo acumulado de las infracciones.
-	  * @return Cola con objetos InfraccionesFechaHora
-	  */
+	 * Requerimiento 3B: Buscar las franjas de fecha-hora donde se tiene un valor acumulado
+	 * de infracciones en un rango dado [US$ valor inicial, US$ valor final]. 
+	 * @param  double valorInicial: Valor mínimo acumulado de las infracciones
+	 * 		double valorFinal: Valor máximo acumulado de las infracciones.
+	 * @return Cola con objetos InfraccionesFechaHora
+	 */
 	public IQueue<InfraccionesFechaHora> consultarFranjasAcumuladoEnRango(double valorInicial, double valorFinal)
 	{
 		// TODO completar
 		return null;		
 	}
-	
+
 	/**
-	  * Requerimiento 1C: Obtener  la información de  una  addressId dada
-	  * @param  int addressID: Localización de la consulta.
-	  * @return Objeto InfraccionesLocalizacion
-	  */
+	 * Requerimiento 1C: Obtener  la información de  una  addressId dada
+	 * @param  int addressID: Localización de la consulta.
+	 * @return Objeto InfraccionesLocalizacion
+	 */
 	public InfraccionesLocalizacion consultarPorAddressId(int addressID)
 	{
 		// TODO completar
 		return null;		
 	}
-	
+
 	/**
-	  * Requerimiento 2C: Obtener  las infracciones  en  un  rango de
-	  * horas  [HH:MM:SS  inicial,HH:MM:SS  final]
-	  * @param  LocalTime horaInicial: Hora  inicial del rango de búsqueda
-	  * 		LocalTime horaFinal: Hora final del rango de búsqueda
-	  * @return Objeto InfraccionesFranjaHorariaViolationCode
-	  */
+	 * Requerimiento 2C: Obtener  las infracciones  en  un  rango de
+	 * horas  [HH:MM:SS  inicial,HH:MM:SS  final]
+	 * @param  LocalTime horaInicial: Hora  inicial del rango de búsqueda
+	 * 		LocalTime horaFinal: Hora final del rango de búsqueda
+	 * @return Objeto InfraccionesFranjaHorariaViolationCode
+	 */
 	public InfraccionesFranjaHorariaViolationCode consultarPorRangoHoras(LocalTime horaInicial, LocalTime horaFinal)
 	{
 		// TODO completar
 		return null;		
 	}
-	
+
 	/**
-	  * Requerimiento 3C: Obtener  el  ranking  de  las  N localizaciones geográficas
-	  * (Xcoord,  Ycoord)  con  la mayor  cantidad  de  infracciones.
-	  * @param  int N: Numero de las localizaciones con mayor número de infracciones
-	  * @return Cola de objetos InfraccionesLocalizacion
-	  */
+	 * Requerimiento 3C: Obtener  el  ranking  de  las  N localizaciones geográficas
+	 * (Xcoord,  Ycoord)  con  la mayor  cantidad  de  infracciones.
+	 * @param  int N: Numero de las localizaciones con mayor número de infracciones
+	 * @return Cola de objetos InfraccionesLocalizacion
+	 */
 	public IQueue<InfraccionesLocalizacion> rankingNLocalizaciones(int N)
 	{
 		// TODO completar
 		return null;		
 	}
-	
+
 	/**
-	  * Requerimiento 4C: Obtener la  información  de  los códigos (ViolationCode) ordenados por su numero de infracciones.
-	  * @return Contenedora de objetos InfraccionesViolationCode.
+	 * Requerimiento 4C: Obtener la  información  de  los códigos (ViolationCode) ordenados por su numero de infracciones.
+	 * @return Contenedora de objetos InfraccionesViolationCode.
 	  // TODO Definir la estructura Contenedora
-	  */
-//	public Contenedora<InfraccionesViolationCode> ordenarCodigosPorNumeroInfracciones()
-//	{
-//		// TODO completar
-//		// TODO Definir la Estructura Contenedora
-//		return null;		
-//	}
+	 */
+	//	public Contenedora<InfraccionesViolationCode> ordenarCodigosPorNumeroInfracciones()
+	//	{
+	//		// TODO completar
+	//		// TODO Definir la Estructura Contenedora
+	//		return null;		
+	//	}
+
+
 
 
 }

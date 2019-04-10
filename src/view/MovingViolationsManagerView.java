@@ -1,6 +1,7 @@
 package view;
 
 import model.data_structures.IQueue;
+import model.data_structures.Queue;
 import model.vo.*;
 
 public class MovingViolationsManagerView {
@@ -88,9 +89,10 @@ public class MovingViolationsManagerView {
 		}
 	}
 	
-	public void printReq1B(IQueue<InfraccionesViolationCode> resultados) {
-		for(InfraccionesViolationCode infraVioCode: resultados) {
-			System.out.println(infraVioCode.toString());
+	public void printReq1B(Queue<InfraccionesViolationCode> cola) {
+		for(int i = 0; i<cola.size();i++) {
+			InfraccionesViolationCode vio = cola.dequeue();
+			System.out.println(vio.toString());
 			/* Detalle de las infracciones (Se requiere SOLO en caso de validacion)*/
 			/*
 			for(VOMovingViolations vo: infraVioCode.getListaInfracciones()) {

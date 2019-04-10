@@ -2,6 +2,7 @@ package model.vo;
 
 import model.data_structures.ColaPrioridadHeap;
 import model.data_structures.IQueue;
+import model.data_structures.Queue;
 
 /**
  * Organiza las infracciones por el el código de la infracción y muestra las estadisticas
@@ -28,7 +29,7 @@ public class InfraccionesViolationCode extends EstadisticaInfracciones implement
 	 * @param lista Lista de infracciones que poseen el mismo ViolationCode
 	 */
 	
-	public InfraccionesViolationCode(String violationCodeP, ColaPrioridadHeap<InfraccionesViolationCode> lista) {
+	public InfraccionesViolationCode(String violationCodeP, Queue<VOMovingViolations> lista) {
 		
 		super(lista);
 		this.violationCode = violationCodeP;
@@ -47,7 +48,12 @@ public class InfraccionesViolationCode extends EstadisticaInfracciones implement
 
 	@Override
 	public int compareTo(InfraccionesViolationCode o) {
-		// TODO Auto-generated method stub
-		return 0;
+		if(this.listaInfracciones.size()<o.getListaInfracciones().size()){
+			return -1;
+		}
+		if(this.listaInfracciones.size()>o.getListaInfracciones().size()){
+			return 1;
+		}
+		else return 0;
 	}	
 }
