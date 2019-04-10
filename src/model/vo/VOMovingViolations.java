@@ -46,7 +46,7 @@ public class VOMovingViolations  implements Comparable<VOMovingViolations>{
 				+ ",\n getTicketIssueDate()=" + getTicketIssueDate() + ",\n getTotalPaid()=" + getTotalPaid()
 				+ ",\n getAccidentIndicator()=" + getAccidentIndicator() + ",\n getViolationDescription()="
 				+ getViolationDescription() + ",\n getStreetSegId()=" + getStreetSegId() + ",\n getAddressId()="
-				+ getAddressId()+ ",\n getXCoord()=" + getXCoord() + ",\n getYCoord()=" + getYCoord()+ "]\n\n";
+				+ getAddressId()+ ",\n getXCoord()=" + getXCoord() + ",\n getYCoord()=" + getYCoord()+",\n getViolationCode()=" + getViolationCode()+ "]\n\n";
 	}
 
 
