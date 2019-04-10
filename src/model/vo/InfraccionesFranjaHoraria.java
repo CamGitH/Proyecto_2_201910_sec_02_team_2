@@ -4,6 +4,7 @@ package model.vo;
 import java.time.LocalTime;
 
 import model.data_structures.IQueue;
+import model.data_structures.Queue;
 
 /**
  * Agrupa las infracciones por un rango de fecha/hora segun sea el caso
@@ -31,7 +32,7 @@ public class InfraccionesFranjaHoraria extends EstadisticaInfracciones {
 	 * @param lista Cola con las infraciones que pertenecen al rango de horas establecido
 	 */
 	
-	public InfraccionesFranjaHoraria(LocalTime fInicial, LocalTime fFinal, IQueue<VOMovingViolations> lista) {
+	public InfraccionesFranjaHoraria(LocalTime fInicial, LocalTime fFinal, Queue<VOMovingViolations> lista) {
 		super(lista);
 		this.hora_Inicial = fInicial;
 		this.hora_Final = fFinal;		
