@@ -20,7 +20,6 @@ import model.data_structures.LinkedList;
 import model.data_structures.Nodo;
 import model.data_structures.NodoLinkedList;
 import model.data_structures.Queue;
-import model.sort.Sort;
 import model.vo.EstadisticaInfracciones;
 import model.vo.EstadisticasCargaInfracciones;
 import model.vo.InfraccionesFecha;
@@ -262,7 +261,7 @@ public class MovingViolationsManager {
 		Queue<VOMovingViolations> cola = new Queue<>();
 		InfraccionesViolationCode infracciones = null;
 
-		ColaPrioridadHeap<VOMovingViolations> colaOrdenamiento = new ColaPrioridadHeap<>();
+		ColaPrioridadHeap<VOMovingViolations> colaOrdenamiento = new ColaPrioridadHeap<VOMovingViolations>();
 		ColaPrioridadHeap<InfraccionesViolationCode> colaPrioridad = new ColaPrioridadHeap<InfraccionesViolationCode>();
 
 		Iterable<String> iterable = arbolRojoNegro.keys();
@@ -277,7 +276,7 @@ public class MovingViolationsManager {
 			
 			VOMovingViolations infraccion2 = colaOrdenamiento.delMax();
 			
-			while((infraccion.getViolationCode().equals(infraccion2.getViolationCode())&&infraccion2!=null)){
+			while((infraccion.getViolationCode().equals(infraccion2.getViolationCode()))){
 				cola.enqueue(infraccion);
 				violationCodeP = infraccion.getViolationCode()+"";
 				infraccion=infraccion2;
@@ -285,11 +284,11 @@ public class MovingViolationsManager {
 				i++;
 			}
 	
-<<<<<<< HEAD
-			if(!cola.isEmpty()){
+			if(cola.size()>0){
 			infracciones = new InfraccionesViolationCode(violationCodeP, cola);
 			colaPrioridad.insert(infracciones);
 			}
+			
 			
 			for (int j = 0; j<cola.size();j++){
 				cola.dequeue();
@@ -304,9 +303,6 @@ public class MovingViolationsManager {
 		return listaFinal;		
 	}	
 
-
-
-=======
 	/*
 	 * 1A- Obtener el ranking de las N franjas horarias que tengan más infracciones. 
 	 * El valor N es un dato de entrada. Se define las franjas horarias válidas
@@ -364,8 +360,7 @@ public class MovingViolationsManager {
 //				+ "por las infracciones es de "+ valortotal ;
 		return lista;
 		}
-	
->>>>>>> 951da352cbe67cb7ecd628a1fb03482567e5618b
+
 	/**
 	 * Requerimiento 2B: Consultar las  infracciones  por  
 	 * Localización  Geográfica  (Xcoord, Ycoord) en Arbol.
@@ -379,7 +374,6 @@ public class MovingViolationsManager {
 		String location = "";
 		String address = "";
 		String streetSeg = "";
-
 
 		Queue<VOMovingViolations> listaBuscados = new Queue<>();
 
