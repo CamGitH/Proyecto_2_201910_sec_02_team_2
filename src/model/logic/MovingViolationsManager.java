@@ -217,8 +217,7 @@ public class MovingViolationsManager {
 	  */
 	public IQueue<InfraccionesFranjaHoraria> rankingNFranjas(int N)
 	{
-		// TODO completar
-		return null;		
+		return (IQueue<InfraccionesFranjaHoraria>) porFranjasHorarias(N);
 	}
 	
 	/**
@@ -270,7 +269,63 @@ public class MovingViolationsManager {
 		return listaBuscados;		
 		}	
 	
-
+	/*
+	 * 1A- Obtener el ranking de las N franjas horarias que tengan más infracciones. 
+	 * El valor N es un dato de entrada. Se define las franjas horarias válidas
+	 */
+	public InfraccionesFranjaHoraria porFranjasHorarias(int s)
+	{
+		String ini;
+		String fin;
+		String n = Integer.toString(s);
+		String[]nn=n.split("-");
+		
+		ini=nn[1];
+		fin=nn[2];
+		
+		if(fin=="24:00:00") {
+			fin ="00:00:00";
+		}
+		if(ini=="24:00:00") {
+			ini ="00:00:00";
+		}		
+		int intervalo = 0;
+		int totalDeInf=0;
+		int postgSinAccidentes =0;
+		int postgConAccidentes =0;
+		int valortotal =0;
+		
+		intervalo = Integer.parseInt(fin)-Integer.parseInt(ini);
+		
+		Queue<VOMovingViolations> lista = new Queue<>();
+		
+		Iterable<String> iterable = arbolRojoNegro.keys();
+		for(String s: iterable){
+			VOMovingViolations infraccion = arbolRojoNegro.get(Integer.parseInt(s)+"");
+			if((infraccion.getTicketIssueDate()+"").compareTo(fin)<0 && (infraccion.getTicketIssueDate()+"").compareTo(ini)>0){
+				totalDeInf++;
+				//Si la fecha tiene año esto no va a funcionar
+				if(infraccion.getAccidentIndicator()=="No") {
+					// como es el texto de "getAccidentIndicator()" cambiarlo por [No]
+					postgSinAccidentes++;
+				}else {
+					postgConAccidentes++;
+				}
+				valortotal = valortotal+ Integer.parseInt(infraccion.getTotalPaid());
+				
+					lista.enqueue(infraccion);
+		}
+			}
+			
+					
+		postgConAccidentes= (postgConAccidentes*100)/totalDeInf;
+		postgSinAccidentes= (postgSinAccidentes*100)/totalDeInf;
+//		return "El intervalo recorre una cantidad total de:  "+intervalo+" horas. Con un total de: "+ totalDeInf +" de "
+//				+ "infracciones. El porcentage de infracciones sin accidentes es del "+ postgSinAccidentes+"% mientas que "
+//				+ "el porcentage de infracciones sin accidentes es de "+ postgSinAccidentes+"%. Y el valot total a pagar "
+//				+ "por las infracciones es de "+ valortotal ;
+		return lista;
+		}
 	
 	/**
 	  * Requerimiento 2B: Consultar las  infracciones  por  

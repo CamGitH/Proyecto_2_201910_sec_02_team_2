@@ -1,5 +1,6 @@
 package model.vo;
 
+import model.data_structures.IQueue;
 import model.data_structures.Queue;
 
 /**
@@ -71,6 +72,7 @@ public class EstadisticaInfracciones {
 	//Metodos Getters and Setters
 	//=========================================================
 	
+
 	/**
 	 * Gets the total infracciones.
 	 * @param lista 
