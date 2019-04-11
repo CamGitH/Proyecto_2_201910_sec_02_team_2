@@ -126,11 +126,8 @@ public class Controller {
 				view.printMessage("Ingrese la cantidad maxima de dinero que deben acumular las infracciones en sus rangos de fecha (Ej. 5678,23)");
 				double cantidadMaxima = sc.nextDouble();
 
-				//TODO Completar para la invocación del metodo 3B
-				//model.consultarFranjasAcumuladoEnRango(double valorInicial, double valorFinal)
-
-				//TODO Mostrar resultado de tipo Cola con InfraccionesFechaHora 
-				//view.printReq3B( ... )
+				Queue<InfraccionesFechaHora> cola2 = model.consultarFranjasAcumuladoEnRango(cantidadMinima, cantidadMaxima );
+				view.printReq3B(cola2);
 				break;
 
 			case 7:

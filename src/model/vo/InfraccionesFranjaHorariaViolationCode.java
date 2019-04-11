@@ -3,6 +3,7 @@ package model.vo;
 import java.time.LocalTime;
 
 import model.data_structures.IQueue;
+import model.data_structures.Queue;
 
 /**
  * Brinda la información del requerimiento 2C
@@ -21,13 +22,13 @@ public class InfraccionesFranjaHorariaViolationCode extends InfraccionesFranjaHo
 	 * Agrupa las infracciones del rango de hora por ViolationCode y muestra sus estadisticas
 	 */
 	
-	private IQueue<InfraccionesViolationCode> infViolationCode;
+	private Queue<InfraccionesViolationCode> infViolationCode;
 
 	/**
 	 * Instantiates a new object.
 	 *
 	 */
-	public InfraccionesFranjaHorariaViolationCode(LocalTime hInicial, LocalTime hFinal, IQueue<VOMovingViolations> lista, IQueue<InfraccionesViolationCode> pInfViolationCode) {		
+	public InfraccionesFranjaHorariaViolationCode(LocalTime hInicial, LocalTime hFinal, Queue<VOMovingViolations> lista, Queue<InfraccionesViolationCode> pInfViolationCode) {		
 		super(hInicial, hFinal, lista);
 		this.infViolationCode = pInfViolationCode;
 	}
@@ -35,14 +36,14 @@ public class InfraccionesFranjaHorariaViolationCode extends InfraccionesFranjaHo
 	/**
 	 * @return the infViolationCode
 	 */
-	public IQueue<InfraccionesViolationCode> getInfViolationCode() {
+	public Queue<InfraccionesViolationCode> getInfViolationCode() {
 		return infViolationCode;
 	}
 
 	/**
 	 * @param infViolationCode the infViolationCode to set
 	 */
-	public void setInfViolationCode(IQueue<InfraccionesViolationCode> infViolationCode) {
+	public void setInfViolationCode(Queue<InfraccionesViolationCode> infViolationCode) {
 		this.infViolationCode = infViolationCode;
 	}
 }

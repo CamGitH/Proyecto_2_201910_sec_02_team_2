@@ -92,6 +92,8 @@ public class MovingViolationsManagerView {
 	public void printReq1B(Queue<InfraccionesViolationCode> cola) {
 		for(int i = 0; i<cola.size();i++) {
 			InfraccionesViolationCode vio = cola.dequeue();
+			int y = i+1;
+			System.out.println("Violation code #"+y+":\n");
 			System.out.println(vio.toString());
 			/* Detalle de las infracciones (Se requiere SOLO en caso de validacion)*/
 			/*
@@ -113,9 +115,9 @@ public class MovingViolationsManagerView {
 	}
 	
 	
-	public void printReq3B(IQueue<InfraccionesFechaHora> resultados) {
-		for(InfraccionesFechaHora infraFechas: resultados) {
-			System.out.println(infraFechas.toString());
+	public void printReq3B(Queue<InfraccionesFechaHora> resultados) {
+		for(int i = 0; i<resultados.size();i++) {
+			System.out.println(resultados.toString());
 			/* Detalle de las infracciones (Se requiere SOLO en caso de validacion)*/
 			/*
 			for(VOMovingViolations vo: infraFechas.getListaInfracciones()) {
