@@ -77,9 +77,11 @@ public class MovingViolationsManagerView {
 		*/
 	}
 	
-	public void printReq3A(IQueue<InfraccionesFecha> resultados) {
-		for(InfraccionesFecha infraFechas: resultados) {
-			System.out.println(infraFechas.toString());
+	public void printReq3A(Queue<InfraccionesFecha> resultados) {
+		for(int i = 0; i<resultados.size();i++) {
+			InfraccionesFecha aaa = resultados.dequeue();
+			System.out.println("\n");
+			System.out.println(aaa.toString());
 			/* Detalle de las infracciones (Se requiere SOLO en caso de validacion)*/
 			/*
 			for(VOMovingViolations vo: infraFechas.getListaInfracciones()) {

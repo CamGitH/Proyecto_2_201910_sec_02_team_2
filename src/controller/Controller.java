@@ -94,11 +94,10 @@ public class Controller {
 				String fechaFinalStr = sc.next();
 				LocalDate fechaFinal = ManejoFechaHora.convertirFecha_LD( fechaFinalStr );
 
-				//TODO Completar para la invocacion del metodo 3A
-				//model.consultarInfraccionesPorRangoFechas(LocalDate fechaInicial, LocalDate fechaFinal)
+				
+				Queue<InfraccionesFecha> aaa = model.consultarInfraccionesPorRangoFechas(fechaInicial, fechaFinal);
 
-				//TODO Mostrar resultado de tipo Cola de InfraccionesFecha
-				//view.printReq3A( ... )
+				view.printReq3A(aaa);
 				break;
 
 

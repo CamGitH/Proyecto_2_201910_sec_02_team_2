@@ -221,7 +221,57 @@ public class MovingViolationsManager {
 	 */
 	public IQueue<InfraccionesFranjaHoraria> rankingNFranjas(int N)
 	{
-		return  porFranjasHorarias(N);
+		String ini;
+		String fin;
+		String n = Integer.toString(s);
+		String[]nn=n.split("-");
+
+		ini=nn[1];
+		fin=nn[2];
+
+		if(fin=="24:00:00") {
+			fin ="00:00:00";
+		}
+		if(ini=="24:00:00") {
+			ini ="00:00:00";
+		}		
+		int intervalo = 0;
+		int totalDeInf=0;
+		int postgSinAccidentes =0;
+		int postgConAccidentes =0;
+		int valortotal =0;
+
+		intervalo = Integer.parseInt(fin)-Integer.parseInt(ini);
+
+		Queue<VOMovingViolations> lista = new Queue<>();
+
+		Iterable<String> iterable = arbolRojoNegro.keys();
+		for(String c: iterable){
+			VOMovingViolations infraccion = arbolRojoNegro.get(Integer.parseInt(c)+"");
+			if((infraccion.getTicketIssueDate()+"").compareTo(fin)<0 && (infraccion.getTicketIssueDate()+"").compareTo(ini)>0){
+				totalDeInf++;
+				//Si la fecha tiene año esto no va a funcionar
+				if(infraccion.getAccidentIndicator()=="No") {
+					// como es el texto de "getAccidentIndicator()" cambiarlo por [No]
+					postgSinAccidentes++;
+				}else {
+					postgConAccidentes++;
+				}
+				valortotal = valortotal+ Integer.parseInt(infraccion.getTotalPaid());
+
+				lista.enqueue(infraccion);
+			}
+		}
+
+
+		postgConAccidentes= (postgConAccidentes*100)/totalDeInf;
+		postgSinAccidentes= (postgSinAccidentes*100)/totalDeInf;
+		//		return "El intervalo recorre una cantidad total de:  "+intervalo+" horas. Con un total de: "+ totalDeInf +" de "
+		//				+ "infracciones. El porcentage de infracciones sin accidentes es del "+ postgSinAccidentes+"% mientas que "
+		//				+ "el porcentage de infracciones sin accidentes es de "+ postgSinAccidentes+"%. Y el valot total a pagar "
+		//				+ "por las infracciones es de "+ valortotal ;
+		return lista;
+	
 	}
 
 	/**
@@ -233,9 +283,25 @@ public class MovingViolationsManager {
 	 */
 	public InfraccionesLocalizacion consultarPorLocalizacionHash(double xCoord, double yCoord)
 	{
-		String x = Double.toString(xCoord);
-		String y = Double.toString(yCoord);
-		return ordenarPorLocGeo(x, y);
+		String location = "";
+		String address = "";
+		String street = "";
+
+		Queue<VOMovingViolations> listaBuscados = new Queue<>();
+
+		Iterable<String> iterable = arbolRojoNegro.keys();
+		for(String s: iterable){
+			VOMovingViolations infraccion = arbolRojoNegro.get(Integer.parseInt(s)+"");
+			if((infraccion.getXCoord()+"").equals(xCoord) && (infraccion.getYCoord()+"").equals(yCoord)){
+				
+				location = infraccion.getLocation();
+				address = infraccion.getAddressId();
+				street = infraccion.getStreetSegId();
+				listaBuscados.enqueue(infraccion);
+			}
+		}
+		InfraccionesLocalizacion info = new InfraccionesLocalizacion(xCoord+"", yCoord+"", location, address, street, listaBuscados);
+		return info;	
 	}
 
 	/**
@@ -244,10 +310,24 @@ public class MovingViolationsManager {
 	 * 		LocalDate fechaFinal: Fecha final del rango de búsqueda
 	 * @return Cola con objetos InfraccionesFecha
 	 */
-	public IQueue<InfraccionesFecha> consultarInfraccionesPorRangoFechas(LocalDate fechaInicial, LocalDate fechaFinal)
+	public Queue<InfraccionesFecha> consultarInfraccionesPorRangoFechas(LocalDate fechaInicial, LocalDate fechaFinal)
 	{
-		// TODO completar
-		return null;		
+		ManejoFechaHora conv= new ManejoFechaHora();
+		Queue<VOMovingViolations> listaBuscados = new Queue<>();
+
+		Iterable<String> iterable = arbolRojoNegro.keys();
+		for(String s: iterable){
+			VOMovingViolations infraccion = arbolRojoNegro.get(Integer.parseInt(s)+"");
+			String fecha = infraccion.getTicketIssueDate();
+			String[] parts = fecha.split("T");
+			LocalDate ff = conv.convertirFecha_LD(parts[0]);
+			if(ff.isAfter(fechaInicial) && ff.isBefore(fechaFinal)){	
+				listaBuscados.enqueue(infraccion);
+			}		
+		}
+		InfraccionesFecha r = new InfraccionesFecha(listaBuscados, fechaInicial);
+		return r;
+		
 	}
 
 	/**
@@ -305,114 +385,7 @@ public class MovingViolationsManager {
 		return listaFinal;		
 	}	
 
-	/*
-	 * 1A- Obtener el ranking de las N franjas horarias que tengan más infracciones. 
-	 * El valor N es un dato de entrada. Se define las franjas horarias válidas
-	 */
-	public IQueue<InfraccionesFranjaHoraria> porFranjasHorarias(int s)
-	{
-		String ini;
-		String fin;
-		String n = Integer.toString(s);
-		String[]nn=n.split("-");
-
-		ini=nn[1];
-		fin=nn[2];
-
-		if(fin=="24:00:00") {
-			fin ="00:00:00";
-		}
-		if(ini=="24:00:00") {
-			ini ="00:00:00";
-		}		
-		int intervalo = 0;
-		int totalDeInf=0;
-		int postgSinAccidentes =0;
-		int postgConAccidentes =0;
-		int valortotal =0;
-
-		intervalo = Integer.parseInt(fin)-Integer.parseInt(ini);
-
-		Queue<VOMovingViolations> lista = new Queue<>();
-
-		Iterable<String> iterable = arbolRojoNegro.keys();
-		for(String c: iterable){
-			VOMovingViolations infraccion = arbolRojoNegro.get(Integer.parseInt(c)+"");
-			if((infraccion.getTicketIssueDate()+"").compareTo(fin)<0 && (infraccion.getTicketIssueDate()+"").compareTo(ini)>0){
-				totalDeInf++;
-				//Si la fecha tiene año esto no va a funcionar
-				if(infraccion.getAccidentIndicator()=="No") {
-					// como es el texto de "getAccidentIndicator()" cambiarlo por [No]
-					postgSinAccidentes++;
-				}else {
-					postgConAccidentes++;
-				}
-				valortotal = valortotal+ Integer.parseInt(infraccion.getTotalPaid());
-
-				lista.enqueue(infraccion);
-			}
-		}
-
-
-		postgConAccidentes= (postgConAccidentes*100)/totalDeInf;
-		postgSinAccidentes= (postgSinAccidentes*100)/totalDeInf;
-		//		return "El intervalo recorre una cantidad total de:  "+intervalo+" horas. Con un total de: "+ totalDeInf +" de "
-		//				+ "infracciones. El porcentage de infracciones sin accidentes es del "+ postgSinAccidentes+"% mientas que "
-		//				+ "el porcentage de infracciones sin accidentes es de "+ postgSinAccidentes+"%. Y el valot total a pagar "
-		//				+ "por las infracciones es de "+ valortotal ;
-		return lista;
-	}
-
 	
-	/*
-	 * 2A- Realizar el ordenamiento de las infracciones por Localización Geográfica (Xcoord,Ycoord). 
-	 */
-	public InfraccionesLocalizacion ordenarPorLocGeo (String xCoord, String yCoord) {
-		
-		String location = "";
-		String address = "";
-		String street = "";
-
-		Queue<VOMovingViolations> listaBuscados = new Queue<>();
-
-		Iterable<String> iterable = arbolRojoNegro.keys();
-		for(String s: iterable){
-			VOMovingViolations infraccion = arbolRojoNegro.get(Integer.parseInt(s)+"");
-			if((infraccion.getXCoord()+"").equals(xCoord) && (infraccion.getYCoord()+"").equals(yCoord)){
-				
-				location = infraccion.getLocation();
-				address = infraccion.getAddressId();
-				street = infraccion.getStreetSegId();
-				listaBuscados.enqueue(infraccion);
-			}
-		}
-		InfraccionesLocalizacion info = new InfraccionesLocalizacion(xCoord, yCoord, location, address, street, listaBuscados);
-		return info;		
-	}
-	
-	
-	/*
-	 * 3A- Buscar las infracciones por rango de fechas 
-	 * [Fecha Inicial (Año/Mes/Día), Fecha Final(Año/Mes/Día)]. 
-	 */
-	public IQueue<InfraccionesFecha> infraccionesPorRangFecha(LocalDate fechaInicial, LocalDate fechaFinal) {
-
-		Queue<VOMovingViolations> listaBuscados = new Queue<>();
-
-		Iterable<String> iterable = arbolRojoNegro.keys();
-		for(String s: iterable){
-			VOMovingViolations infraccion = arbolRojoNegro.get(Integer.parseInt(s)+"");
-			if((infraccion.getTicketIssueDate()+"").compareTo(fechaInicial) && (infraccion.getYCoord()+"").equals(1)){
-				
-				listaBuscados.enqueue(infraccion);
-			}		
-		}
-		InfraccionesFecha r = new InfraccionesFecha(listaBuscados, fechaInicial);
-		return (IQueue<InfraccionesFecha>) r;
-	}
-		
-		
-		
 		
 	/**
 	 * Requerimiento 2B: Consultar las  infracciones  por  
