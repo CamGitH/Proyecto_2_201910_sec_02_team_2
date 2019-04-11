@@ -47,13 +47,8 @@ public class InfraccionesViolationCode extends EstadisticaInfracciones implement
 
 
 	@Override
-	public int compareTo(InfraccionesViolationCode o) {
-		if(this.listaInfracciones.size()<o.getListaInfracciones().size()){
-			return -1;
-		}
-		if(this.listaInfracciones.size()>o.getListaInfracciones().size()){
-			return 1;
-		}
-		else return 0;
+	public int compareTo(InfraccionesViolationCode violation) {
+		
+		return Integer.compare(getTotalInfracciones(), violation.getTotalInfracciones());
 	}	
 }

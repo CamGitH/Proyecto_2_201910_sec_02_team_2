@@ -3,6 +3,7 @@ package model.logic;
 import java.io.FileReader;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -192,7 +193,7 @@ public class MovingViolationsManager {
 			VOMovingViolations infraccion = new VOMovingViolations(
 					Integer.parseInt(list.get(i)[0]),
 					list.get(i)[2],
-					list.get(i)[14],
+					list.get(i)[13],
 					list.get(i)[9],
 					list.get(i)[12],
 					list.get(i)[16],
@@ -255,7 +256,6 @@ public class MovingViolationsManager {
 	 */
 	public Queue<InfraccionesViolationCode> rankingNViolationCodes(int N)
 	{
-
 		Queue<InfraccionesViolationCode> listaFinal = new Queue<InfraccionesViolationCode>();
 		Queue<VOMovingViolations> cola = new Queue<VOMovingViolations>();
 
@@ -268,34 +268,36 @@ public class MovingViolationsManager {
 			colaOrdenamiento.insert(infraccion);
 		}
 
-		ArrayList<VOMovingViolations> arreglo = new ArrayList<VOMovingViolations>();
-		for(int i = 0; i<colaOrdenamiento.size();i++){
-			arreglo.add(colaOrdenamiento.delMax());
-		}
-		VOMovingViolations infraccion = arreglo.get(0);
-		VOMovingViolations infraccion2 = arreglo.get(1);
-
-		for(int i = 2; i<arreglo.size();i++){
-
+	
+		while(colaOrdenamiento.size()!=0){
+		
+			VOMovingViolations infraccion = colaOrdenamiento.delMax();
+			String code = infraccion.getViolationCode();
 			cola.enqueue(infraccion);
-			String codigo = infraccion.getViolationCode();
+			
+			VOMovingViolations infraccion2 = colaOrdenamiento.delMax();
+			String code2 = infraccion2.getViolationCode();
 
-			while(infraccion.getViolationCode().equals(infraccion2.getViolationCode())){
+			while(code.equals(code2)&&colaOrdenamiento.size()!=0){
 				cola.enqueue(infraccion2);
-				infraccion=infraccion2;
-				infraccion2=arreglo.get(i);
+				infraccion2 = colaOrdenamiento.delMax();
+				code = code2;
+				code2 = infraccion2.getViolationCode();
 			}
 
-			InfraccionesViolationCode infracciones = new InfraccionesViolationCode(codigo, cola);
+			InfraccionesViolationCode infracciones = new InfraccionesViolationCode(code, cola);
 			colaPrioridad.insert(infracciones);
-			for (int j = 0; j<cola.size();j++){
+			
+			while(cola.size()!=0){
 				cola.dequeue();
-
 			}
 
 		}
-		for(int k=0;k<N;k++){
+		
+		N*=2;
+		while(N!=0){
 			listaFinal.enqueue(colaPrioridad.delMax());
+			N--;
 		}
 
 		return listaFinal;		
@@ -398,10 +400,30 @@ public class MovingViolationsManager {
 	 * 		double valorFinal: Valor máximo acumulado de las infracciones.
 	 * @return Cola con objetos InfraccionesFechaHora
 	 */
-	public IQueue<InfraccionesFechaHora> consultarFranjasAcumuladoEnRango(double valorInicial, double valorFinal)
+	public Queue<InfraccionesFechaHora> consultarFranjasAcumuladoEnRango(double valorInicial, double valorFinal)
 	{
-		// TODO completar
-		return null;		
+		Queue<InfraccionesFechaHora> colaFinal = new Queue<InfraccionesFechaHora>();
+		ArbolRojoN<Integer, InfraccionesFechaHora> arbol = new ArbolRojoN<Integer, InfraccionesFechaHora>();
+		ManejoFechaHora convertidorFecha = new ManejoFechaHora();
+		Iterable<String> iterable = arbolRojoNegro.keys();
+		for(String s: iterable){
+			boolean x = true;
+			VOMovingViolations infraccion = arbolRojoNegro.get(Integer.parseInt(s)+"");
+			String fecha = infraccion.getTicketIssueDate();
+			String[] parts = fecha.split("T");
+			String[] hora = parts[1].split("Z");
+			String[] parte = hora[0].split("\\.");
+			LocalTime fechaHora = convertidorFecha.convertirHora_LT(parte[0]);
+			System.out.println(fechaHora);
+//			while(x){
+//				if()
+//			}
+		}
+		
+		
+		
+		//InfraccionesFechaHora infracciones = new InfraccionesFechaHora("pFechaHoraIni", "pFechaHoraFin", "lista");
+		return colaFinal;		
 	}
 
 	/**
