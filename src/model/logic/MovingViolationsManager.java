@@ -397,26 +397,19 @@ public class MovingViolationsManager {
 	 */
 	public IQueue<InfraccionesFecha> infraccionesPorRangFecha(LocalDate fechaInicial, LocalDate fechaFinal) {
 
-		String location = "";
-		String address = "";
-		String street = "";
-
 		Queue<VOMovingViolations> listaBuscados = new Queue<>();
 
 		Iterable<String> iterable = arbolRojoNegro.keys();
 		for(String s: iterable){
 			VOMovingViolations infraccion = arbolRojoNegro.get(Integer.parseInt(s)+"");
-			if((infraccion.getXCoord()+"").equals(1) && (infraccion.getYCoord()+"").equals(1)){
+			if((infraccion.getTicketIssueDate()+"").compareTo(fechaInicial) && (infraccion.getYCoord()+"").equals(1)){
 				
-				location = infraccion.getLocation();
-				address = infraccion.getAddressId();
-				street = infraccion.getStreetSegId();
 				listaBuscados.enqueue(infraccion);
-		
-			}
-			
-			return null;		
+			}		
 		}
+		InfraccionesFecha r = new InfraccionesFecha(listaBuscados, fechaInicial);
+		return (IQueue<InfraccionesFecha>) r;
+	}
 		
 		
 		
