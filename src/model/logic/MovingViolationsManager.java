@@ -14,6 +14,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 
 import model.data_structures.ArbolRojoN;
+import model.data_structures.ArregloDinamico;
 import model.data_structures.ColaPrioridadHeap;
 import model.data_structures.HashTable;
 import model.data_structures.IQueue;
@@ -268,13 +269,13 @@ public class MovingViolationsManager {
 			colaOrdenamiento.insert(infraccion);
 		}
 
-	
+
 		while(colaOrdenamiento.size()!=0){
-		
+
 			VOMovingViolations infraccion = colaOrdenamiento.delMax();
 			String code = infraccion.getViolationCode();
 			cola.enqueue(infraccion);
-			
+
 			VOMovingViolations infraccion2 = colaOrdenamiento.delMax();
 			String code2 = infraccion2.getViolationCode();
 
@@ -287,13 +288,13 @@ public class MovingViolationsManager {
 
 			InfraccionesViolationCode infracciones = new InfraccionesViolationCode(code, cola);
 			colaPrioridad.insert(infracciones);
-			
+
 			while(cola.size()!=0){
 				cola.dequeue();
 			}
 
 		}
-		
+
 		N*=2;
 		while(N!=0){
 			listaFinal.enqueue(colaPrioridad.delMax());
@@ -403,26 +404,54 @@ public class MovingViolationsManager {
 	public Queue<InfraccionesFechaHora> consultarFranjasAcumuladoEnRango(double valorInicial, double valorFinal)
 	{
 		Queue<InfraccionesFechaHora> colaFinal = new Queue<InfraccionesFechaHora>();
-		ArbolRojoN<Integer, InfraccionesFechaHora> arbol = new ArbolRojoN<Integer, InfraccionesFechaHora>();
+		ArbolRojoN<Double, InfraccionesFechaHora> arbol = new ArbolRojoN<Double, InfraccionesFechaHora>();
 		ManejoFechaHora convertidorFecha = new ManejoFechaHora();
+		ArregloDinamico<Queue<VOMovingViolations>> arregloPorHoras= new ArregloDinamico<Queue<VOMovingViolations>>(15);
+		for(int i = 0;i<24;i++){
+			Queue<VOMovingViolations> cola = new Queue<VOMovingViolations>();
+			arregloPorHoras.agregar(cola);
+		}
+
 		Iterable<String> iterable = arbolRojoNegro.keys();
 		for(String s: iterable){
-			boolean x = true;
 			VOMovingViolations infraccion = arbolRojoNegro.get(Integer.parseInt(s)+"");
 			String fecha = infraccion.getTicketIssueDate();
 			String[] parts = fecha.split("T");
 			String[] hora = parts[1].split("Z");
 			String[] parte = hora[0].split("\\.");
 			LocalTime fechaHora = convertidorFecha.convertirHora_LT(parte[0]);
-			System.out.println(fechaHora);
-//			while(x){
-//				if()
-//			}
+			LocalTime horas = convertidorFecha.convertirHora_LT("00:00:00");
+			
+			int count = 0;
+			while(count<24){
+				
+				LocalTime horaMas = horas.plusMinutes(60);
+				if(fechaHora.isAfter(horas)&&fechaHora.isBefore(horaMas)){
+					Queue<VOMovingViolations> cola= (Queue<VOMovingViolations>) arregloPorHoras.darElemento(count);
+					cola.enqueue(infraccion);
+					count=30;
+				}
+				horas = horas.plusMinutes(60);
+				count++;
+			}
 		}
 		
+		for(int i = 0; i<arregloPorHoras.darTamano();i++){
+			LocalTime horas = convertidorFecha.convertirHora_LT("00:00:00");
+			LocalTime horaMas = horas.plusMinutes(60);
+			Queue<VOMovingViolations> cola = (Queue<VOMovingViolations>) arregloPorHoras.darElemento(i);
+			LocalDateTime horas2 = convertidorFecha.convertirFecha_Hora_LDT(horas.toString());
+			LocalDateTime horaMas2 = convertidorFecha.convertirFecha_Hora_LDT(horaMas.toString());
+			InfraccionesFechaHora infracciones = new InfraccionesFechaHora(horas2, horaMas2, cola);
+			double valor = infracciones.darTotalValor();
+			arbol.put(valor, infracciones);
+		}
+	
+		Iterable<Double> llavesBuscadas = arbol.keys(valorInicial, valorFinal);
 		
-		
-		//InfraccionesFechaHora infracciones = new InfraccionesFechaHora("pFechaHoraIni", "pFechaHoraFin", "lista");
+		for(Double s: llavesBuscadas){
+			colaFinal.enqueue(arbol.get(s));
+		}
 		return colaFinal;		
 	}
 

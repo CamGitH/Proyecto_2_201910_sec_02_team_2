@@ -131,6 +131,10 @@ public class EstadisticaInfracciones {
 		}
 		return valorTotal;
 	}	
+	
+	public double darTotalValor(){
+		return valorTotal;
+	}
 
 	/**
 	 * Gets the lista infracciones.
