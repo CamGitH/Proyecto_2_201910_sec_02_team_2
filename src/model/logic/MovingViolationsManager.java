@@ -431,11 +431,7 @@ public class MovingViolationsManager {
 		Queue<InfraccionesFechaHora> colaFinal = new Queue<InfraccionesFechaHora>();
 		ArbolRojoN<Double, InfraccionesFechaHora> arbol = new ArbolRojoN<Double, InfraccionesFechaHora>();
 		ManejoFechaHora convertidorFecha = new ManejoFechaHora();
-		ArregloDinamico<Queue<VOMovingViolations>> arregloPorHoras= new ArregloDinamico<Queue<VOMovingViolations>>(15);
-		for(int i = 0;i<24;i++){
-			Queue<VOMovingViolations> cola = new Queue<VOMovingViolations>();
-			arregloPorHoras.agregar(cola);
-		}
+	HashTable<Integer, VOMovingViolations> HashPorHoras= new HashTable<>();
 
 		Iterable<String> iterable = arbolRojoNegro.keys();
 		for(String s: iterable){
@@ -449,11 +445,10 @@ public class MovingViolationsManager {
 			
 			int count = 0;
 			while(count<24){
-				
+		
 				LocalTime horaMas = horas.plusMinutes(60);
 				if(fechaHora.isAfter(horas)&&fechaHora.isBefore(horaMas)){
-					Queue<VOMovingViolations> cola= (Queue<VOMovingViolations>) arregloPorHoras.darElemento(count);
-					cola.enqueue(infraccion);
+					HashPorHoras.add(count, infraccion);
 					count=30;
 				}
 				horas = horas.plusMinutes(60);
@@ -461,10 +456,13 @@ public class MovingViolationsManager {
 			}
 		}
 		
-		for(int i = 0; i<arregloPorHoras.darTamano();i++){
+		int n = 0;
+		
+		while(!HashPorHoras.isEmpty()){
 			LocalTime horas = convertidorFecha.convertirHora_LT("00:00:00");
 			LocalTime horaMas = horas.plusMinutes(60);
-			Queue<VOMovingViolations> cola = (Queue<VOMovingViolations>) arregloPorHoras.darElemento(i);
+			Queue<VOMovingViolations> cola = new Queue<VOMovingViolations>();
+			cola.enqueue(HashPorHoras.remove(n));
 			LocalDateTime horas2 = convertidorFecha.convertirFecha_Hora_LDT(horas.toString());
 			LocalDateTime horaMas2 = convertidorFecha.convertirFecha_Hora_LDT(horaMas.toString());
 			InfraccionesFechaHora infracciones = new InfraccionesFechaHora(horas2, horaMas2, cola);
