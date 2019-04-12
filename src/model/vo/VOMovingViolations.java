@@ -1,6 +1,9 @@
 package model.vo;
 
+import java.time.LocalTime;
 import java.util.Comparator;
+
+import model.logic.ManejoFechaHora;
 import model.vo.VOMovingViolations;
 
 /**
@@ -119,6 +122,26 @@ public class VOMovingViolations  implements Comparable<VOMovingViolations>{
 		@Override
 		public int compare(VOMovingViolations object1, VOMovingViolations object2) {
 			return object1.getTicketIssueDate().compareToIgnoreCase(object2.getTicketIssueDate());
+		}
+		
+	}
+	
+	public static class TicketIssueDateHora implements Comparator<VOMovingViolations>{
+
+		@Override
+		public int compare(VOMovingViolations object1, VOMovingViolations object2) {
+			
+			String fecha = object1.getTicketIssueDate();
+			String[] parts = fecha.split("T");
+			String[] hora = parts[1].split("Z");
+			String[] parte = hora[0].split("\\.");
+			
+			String fecha2 = object2.getTicketIssueDate();
+			String[] parts2 = fecha2.split("T");
+			String[] hora2 = parts2[1].split("Z");
+			String[] parte2 = hora2[0].split("\\.");
+			
+			return parte[0].compareToIgnoreCase(parte2[0]);
 		}
 		
 	}

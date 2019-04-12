@@ -15,6 +15,7 @@ import com.opencsv.CSVReaderBuilder;
 
 import model.data_structures.ArbolRojoN;
 import model.data_structures.ArregloDinamico;
+import model.data_structures.ColaPrioridad;
 import model.data_structures.ColaPrioridadHeap;
 import model.data_structures.HashTable;
 import model.data_structures.IQueue;
@@ -22,6 +23,7 @@ import model.data_structures.LinkedList;
 import model.data_structures.Nodo;
 import model.data_structures.NodoLinkedList;
 import model.data_structures.Queue;
+import model.sort.Sort;
 import model.vo.EstadisticaInfracciones;
 import model.vo.EstadisticasCargaInfracciones;
 import model.vo.InfraccionesFecha;
@@ -43,6 +45,10 @@ public class MovingViolationsManager {
 	private ColaPrioridadHeap<VOMovingViolations> colaPrioridad;
 	//HashTable
 	private HashTable<Integer, VOMovingViolations> hashTable;
+
+	private Sort sort;
+
+	private Comparable<VOMovingViolations> [ ] comparables;
 
 	/**
 	 * Metodo constructor
@@ -194,7 +200,7 @@ public class MovingViolationsManager {
 			VOMovingViolations infraccion = new VOMovingViolations(
 					Integer.parseInt(list.get(i)[0]),
 					list.get(i)[2],
-					list.get(i)[13],
+					list.get(i)[14],
 					list.get(i)[9],
 					list.get(i)[12],
 					list.get(i)[16],
@@ -271,7 +277,7 @@ public class MovingViolationsManager {
 		//				+ "el porcentage de infracciones sin accidentes es de "+ postgSinAccidentes+"%. Y el valot total a pagar "
 		//				+ "por las infracciones es de "+ valortotal ;
 		return lista;
-	
+
 	}
 
 	/**
@@ -293,7 +299,7 @@ public class MovingViolationsManager {
 		for(String s: iterable){
 			VOMovingViolations infraccion = arbolRojoNegro.get(Integer.parseInt(s)+"");
 			if((infraccion.getXCoord()+"").equals(xCoord) && (infraccion.getYCoord()+"").equals(yCoord)){
-				
+
 				location = infraccion.getLocation();
 				address = infraccion.getAddressId();
 				street = infraccion.getStreetSegId();
@@ -327,7 +333,7 @@ public class MovingViolationsManager {
 		}
 		InfraccionesFecha r = new InfraccionesFecha(listaBuscados, fechaInicial);
 		return r;
-		
+
 	}
 
 	/**
@@ -385,8 +391,8 @@ public class MovingViolationsManager {
 		return listaFinal;		
 	}	
 
-	
-		
+
+
 	/**
 	 * Requerimiento 2B: Consultar las  infracciones  por  
 	 * Localización  Geográfica  (Xcoord, Ycoord) en Arbol.
@@ -430,52 +436,88 @@ public class MovingViolationsManager {
 	{
 		Queue<InfraccionesFechaHora> colaFinal = new Queue<InfraccionesFechaHora>();
 		ArbolRojoN<Double, InfraccionesFechaHora> arbol = new ArbolRojoN<Double, InfraccionesFechaHora>();
-		ManejoFechaHora convertidorFecha = new ManejoFechaHora();
-	HashTable<Integer, VOMovingViolations> HashPorHoras= new HashTable<>();
+		Queue<VOMovingViolations> cola = new Queue<>();
 
-		Iterable<String> iterable = arbolRojoNegro.keys();
-		for(String s: iterable){
-			VOMovingViolations infraccion = arbolRojoNegro.get(Integer.parseInt(s)+"");
-			String fecha = infraccion.getTicketIssueDate();
-			String[] parts = fecha.split("T");
-			String[] hora = parts[1].split("Z");
-			String[] parte = hora[0].split("\\.");
-			LocalTime fechaHora = convertidorFecha.convertirHora_LT(parte[0]);
-			LocalTime horas = convertidorFecha.convertirHora_LT("00:00:00");
+		generarComparables();
+		Sort.ordenarShellSort(comparables, new VOMovingViolations.TicketIssueDateHora());
+
+		int count = 0;
+
+		LocalTime horas = ManejoFechaHora.convertirHora_LT("00:00:00");
+		LocalTime horaMas = horas.plusMinutes(60);
+
+		while(count<comparables.length){
+
+			VOMovingViolations infraccion = (VOMovingViolations) comparables[count];
+			LocalTime fecha1 = darHora(infraccion);
+			cola.enqueue(infraccion);
+
+			count++;
+
 			
-			int count = 0;
-			while(count<24){
-		
-				LocalTime horaMas = horas.plusMinutes(60);
-				if(fechaHora.isAfter(horas)&&fechaHora.isBefore(horaMas)){
-					HashPorHoras.add(count, infraccion);
-					count=30;
-				}
-				horas = horas.plusMinutes(60);
+			while(fecha1==null&&count<comparables.length-2){
+				infraccion = (VOMovingViolations) comparables[count];
+				fecha1 = darHora(infraccion);
 				count++;
 			}
+			if(fecha1==null){
+				continue;
+			}
+			else{
+			while((fecha1.isAfter(horas)&&fecha1.isBefore(horaMas))&&count<comparables.length){
+
+				cola.enqueue(infraccion);
+				infraccion = (VOMovingViolations) comparables[count];
+				fecha1 = darHora(infraccion);
+
+				if(fecha1==null){
+					while(fecha1==null&&count<comparables.length-2){
+						infraccion = (VOMovingViolations) comparables[count];
+						fecha1 = darHora(infraccion);
+						count++;
+					}
+					continue;
+				}
+				else{
+					count++;	
+				}
+
+			}
+
+			horas = horas.plusHours(1);
+			horaMas=horas.plusHours(1);
+
+			}
+			if(!cola.isEmpty()){
+				InfraccionesFechaHora infracciones = new InfraccionesFechaHora(horas, horaMas, cola);
+				double valor = infracciones.darTotalValor();
+				arbol.put(valor, infracciones);
+
+				while(cola.size()!=0){
+					cola.dequeue();
+				}
+			}
 		}
-		
-		int n = 0;
-		
-		while(!HashPorHoras.isEmpty()){
-			LocalTime horas = convertidorFecha.convertirHora_LT("00:00:00");
-			LocalTime horaMas = horas.plusMinutes(60);
-			Queue<VOMovingViolations> cola = new Queue<VOMovingViolations>();
-			cola.enqueue(HashPorHoras.remove(n));
-			LocalDateTime horas2 = convertidorFecha.convertirFecha_Hora_LDT(horas.toString());
-			LocalDateTime horaMas2 = convertidorFecha.convertirFecha_Hora_LDT(horaMas.toString());
-			InfraccionesFechaHora infracciones = new InfraccionesFechaHora(horas2, horaMas2, cola);
-			double valor = infracciones.darTotalValor();
-			arbol.put(valor, infracciones);
-		}
-	
+
 		Iterable<Double> llavesBuscadas = arbol.keys(valorInicial, valorFinal);
-		
+
 		for(Double s: llavesBuscadas){
 			colaFinal.enqueue(arbol.get(s));
 		}
+		System.out.println(colaFinal.size());
 		return colaFinal;		
+	}
+
+	public LocalTime darHora(VOMovingViolations infraccion){
+		String fecha = infraccion.getTicketIssueDate();
+		String[] parts = fecha.split("T");
+		String[] hora = parts[1].split("Z");
+		String[] parte = hora[0].split("\\.");
+		if(!parte[0].contains(":")){
+			return null;
+		}
+		LocalTime fechaHora = ManejoFechaHora.convertirHora_LT(parte[0]);
+		return fechaHora;
 	}
 
 	/**
@@ -527,6 +569,18 @@ public class MovingViolationsManager {
 	//	}
 
 
+	public void generarComparables(){
+		comparables = new Comparable[listaEncadenada.getSize()];
+		NodoLinkedList<VOMovingViolations> objeto = listaEncadenada.darPrimero();;
+
+		int i=0;
+		while(objeto!=null){
+
+			comparables[i] = objeto.darElemento();
+			i++;
+			objeto=objeto.darSiguiente();
+		}
+	}
 
 
 }
