@@ -98,6 +98,9 @@ public class EstadisticaInfracciones {
 			}
 			listaBuscados.enqueue(infraccion);
 		}
+		if(listaBuscados.size()==0){
+			return 00;
+		}
 		porcentajeAccidentes = ((accidente*100)/listaBuscados.size());
 		accidente=0;
 		return porcentajeAccidentes;

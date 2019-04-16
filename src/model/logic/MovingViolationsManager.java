@@ -31,6 +31,7 @@ import model.vo.InfraccionesFechaHora;
 import model.vo.InfraccionesFranjaHoraria;
 import model.vo.InfraccionesFranjaHorariaViolationCode;
 import model.vo.InfraccionesLocalizacion;
+import model.vo.InfraccionesLocalizacion2;
 import model.vo.InfraccionesViolationCode;
 import model.vo.VOMovingViolations;
 
@@ -225,59 +226,30 @@ public class MovingViolationsManager {
 	 * @param int N: Número de franjas horarias que tienen más infracciones
 	 * @return Cola con objetos InfraccionesFranjaHoraria
 	 */
-	public IQueue<InfraccionesFranjaHoraria> rankingNFranjas(int N)
-	{
-		String ini;
-		String fin;
-		String n = Integer.toString(s);
-		String[]nn=n.split("-");
-
-		ini=nn[1];
-		fin=nn[2];
-
-		if(fin=="24:00:00") {
-			fin ="00:00:00";
+	public Queue<InfraccionesFranjaHoraria> rankingNFranjas(int n)
+	{		
+		if(n==24) {
+			n =0;
 		}
-		if(ini=="24:00:00") {
-			ini ="00:00:00";
-		}		
-		int intervalo = 0;
-		int totalDeInf=0;
-		int postgSinAccidentes =0;
-		int postgConAccidentes =0;
-		int valortotal =0;
+		String s = Integer.toString(n);
+		n++;String ss = Integer.toString(n);
 
-		intervalo = Integer.parseInt(fin)-Integer.parseInt(ini);
-
-		Queue<VOMovingViolations> lista = new Queue<>();
+		Queue lista = new Queue<>();
 
 		Iterable<String> iterable = arbolRojoNegro.keys();
 		for(String c: iterable){
 			VOMovingViolations infraccion = arbolRojoNegro.get(Integer.parseInt(c)+"");
-			if((infraccion.getTicketIssueDate()+"").compareTo(fin)<0 && (infraccion.getTicketIssueDate()+"").compareTo(ini)>0){
-				totalDeInf++;
-				//Si la fecha tiene año esto no va a funcionar
-				if(infraccion.getAccidentIndicator()=="No") {
-					// como es el texto de "getAccidentIndicator()" cambiarlo por [No]
-					postgSinAccidentes++;
-				}else {
-					postgConAccidentes++;
-				}
-				valortotal = valortotal+ Integer.parseInt(infraccion.getTotalPaid());
+			String nv = (infraccion.getTicketIssueDate());
+			String[]nnv=nv.split(":");
 
+			String ii=nnv[0];
+			System.out.println(nnv[0]);
+
+			if((s).compareTo(ii)<=0 && (ss).compareTo(ii)>0){
 				lista.enqueue(infraccion);
 			}
 		}
-
-
-		postgConAccidentes= (postgConAccidentes*100)/totalDeInf;
-		postgSinAccidentes= (postgSinAccidentes*100)/totalDeInf;
-		//		return "El intervalo recorre una cantidad total de:  "+intervalo+" horas. Con un total de: "+ totalDeInf +" de "
-		//				+ "infracciones. El porcentage de infracciones sin accidentes es del "+ postgSinAccidentes+"% mientas que "
-		//				+ "el porcentage de infracciones sin accidentes es de "+ postgSinAccidentes+"%. Y el valot total a pagar "
-		//				+ "por las infracciones es de "+ valortotal ;
 		return lista;
-
 	}
 
 	/**
@@ -298,7 +270,7 @@ public class MovingViolationsManager {
 		Iterable<String> iterable = arbolRojoNegro.keys();
 		for(String s: iterable){
 			VOMovingViolations infraccion = arbolRojoNegro.get(Integer.parseInt(s)+"");
-			if((infraccion.getXCoord()+"").equals(xCoord) && (infraccion.getYCoord()+"").equals(yCoord)){
+			if((infraccion.getXCoord()+"").equals(Double.toString(xCoord)) && (infraccion.getYCoord()+"").equals(Double.toString(yCoord))){
 
 				location = infraccion.getLocation();
 				address = infraccion.getAddressId();
@@ -319,21 +291,22 @@ public class MovingViolationsManager {
 	public Queue<InfraccionesFecha> consultarInfraccionesPorRangoFechas(LocalDate fechaInicial, LocalDate fechaFinal)
 	{
 		ManejoFechaHora conv= new ManejoFechaHora();
-		Queue<VOMovingViolations> listaBuscados = new Queue<>();
+		Queue listaBuscados = new Queue<>();
 
 		Iterable<String> iterable = arbolRojoNegro.keys();
 		for(String s: iterable){
 			VOMovingViolations infraccion = arbolRojoNegro.get(Integer.parseInt(s)+"");
 			String fecha = infraccion.getTicketIssueDate();
 			String[] parts = fecha.split("T");
-			LocalDate ff = conv.convertirFecha_LD(parts[0]);
-			if(ff.isAfter(fechaInicial) && ff.isBefore(fechaFinal)){	
-				listaBuscados.enqueue(infraccion);
+			//System.out.println(parts[0]);
+			if(parts[0]!=null){
+				LocalDate ff = conv.convertirFecha_LD(parts[0]);
+				if(ff.isAfter(fechaInicial) && ff.isBefore(fechaFinal)){	
+					listaBuscados.enqueue(infraccion);
+				}
 			}		
 		}
-		InfraccionesFecha r = new InfraccionesFecha(listaBuscados, fechaInicial);
-		return r;
-
+		return listaBuscados;
 	}
 
 	/**
@@ -454,7 +427,7 @@ public class MovingViolationsManager {
 
 			count++;
 
-			
+
 			while(fecha1==null&&count<comparables.length-2){
 				infraccion = (VOMovingViolations) comparables[count];
 				fecha1 = darHora(infraccion);
@@ -464,28 +437,28 @@ public class MovingViolationsManager {
 				continue;
 			}
 			else{
-			while((fecha1.isAfter(horas)&&fecha1.isBefore(horaMas))&&count<comparables.length){
+				while((fecha1.isAfter(horas)&&fecha1.isBefore(horaMas))&&count<comparables.length){
 
-				cola.enqueue(infraccion);
-				infraccion = (VOMovingViolations) comparables[count];
-				fecha1 = darHora(infraccion);
+					cola.enqueue(infraccion);
+					infraccion = (VOMovingViolations) comparables[count];
+					fecha1 = darHora(infraccion);
 
-				if(fecha1==null){
-					while(fecha1==null&&count<comparables.length-2){
-						infraccion = (VOMovingViolations) comparables[count];
-						fecha1 = darHora(infraccion);
-						count++;
+					if(fecha1==null){
+						while(fecha1==null&&count<comparables.length-2){
+							infraccion = (VOMovingViolations) comparables[count];
+							fecha1 = darHora(infraccion);
+							count++;
+						}
+						continue;
 					}
-					continue;
-				}
-				else{
-					count++;	
+					else{
+						count++;	
+					}
+
 				}
 
-			}
-
-			horas = horas.plusHours(1);
-			horaMas=horas.plusHours(1);
+				horas = horas.plusHours(1);
+				horaMas=horas.plusHours(1);
 
 			}
 			if(!cola.isEmpty()){
@@ -525,10 +498,27 @@ public class MovingViolationsManager {
 	 * @param  int addressID: Localización de la consulta.
 	 * @return Objeto InfraccionesLocalizacion
 	 */
-	public InfraccionesLocalizacion consultarPorAddressId(int addressID)
+	public InfraccionesLocalizacion2 consultarPorAddressId(String addressID)
 	{
-		// TODO completar
-		return null;		
+		String location = "";
+		String address = "";
+		String streetSeg = "";
+
+		Queue<VOMovingViolations> listaBuscados = new Queue<>();
+
+		Iterable<String> iterable = arbolRojoNegro.keys();
+		for(String s: iterable){
+			VOMovingViolations infraccion = arbolRojoNegro.get(Integer.parseInt(s)+"");
+			if((infraccion.getAddressId().equals(addressID))){
+				listaBuscados.enqueue(infraccion);
+				location = infraccion.getLocation();
+				address = infraccion.getAddressId();
+				streetSeg = infraccion.getStreetSegId();
+
+			}
+		}
+		InfraccionesLocalizacion2 info = new InfraccionesLocalizacion2(location, address, streetSeg, listaBuscados);
+		return info;				
 	}
 
 	/**
@@ -540,8 +530,21 @@ public class MovingViolationsManager {
 	 */
 	public InfraccionesFranjaHorariaViolationCode consultarPorRangoHoras(LocalTime horaInicial, LocalTime horaFinal)
 	{
-		// TODO completar
-		return null;		
+		ManejoFechaHora conv= new ManejoFechaHora();
+		Queue listaBuscados = new Queue<>();
+
+		Iterable<String> iterable = arbolRojoNegro.keys();
+		for(String s: iterable){
+			VOMovingViolations infraccion = arbolRojoNegro.get(Integer.parseInt(s)+"");
+			LocalTime pa = darHora(infraccion);
+			if(pa!=null){ 
+				if(pa.isAfter(horaInicial) && pa.isBefore(horaFinal)){	
+					listaBuscados.enqueue(infraccion);
+				}
+			}			
+		}
+		InfraccionesFranjaHorariaViolationCode ret = new InfraccionesFranjaHorariaViolationCode(horaInicial, horaFinal, listaBuscados, listaBuscados);
+		return ret;
 	}
 
 	/**
@@ -550,23 +553,148 @@ public class MovingViolationsManager {
 	 * @param  int N: Numero de las localizaciones con mayor número de infracciones
 	 * @return Cola de objetos InfraccionesLocalizacion
 	 */
-	public IQueue<InfraccionesLocalizacion> rankingNLocalizaciones(int N)
+	public Queue<InfraccionesLocalizacion> rankingNLocalizaciones(int N)
 	{
-		// TODO completar
-		return null;		
+		Queue<InfraccionesLocalizacion> listaFinal = new Queue<InfraccionesLocalizacion>();
+		Queue<VOMovingViolations> cola = new Queue<VOMovingViolations>();
+		ColaPrioridadHeap<InfraccionesLocalizacion> colaPrioridad = new ColaPrioridadHeap<InfraccionesLocalizacion>();
+
+		generarComparables();
+		Sort.ordenarShellSort(comparables, new VOMovingViolations.Coordenadas());
+
+		int count = 0;
+		while(count<comparables.length){
+
+			VOMovingViolations infraccion = (VOMovingViolations) comparables[count];
+			count+=1;
+			if(!(count<comparables.length)){
+				break;
+			}
+			VOMovingViolations infraccion2 = (VOMovingViolations) comparables[count];
+
+			Double coordenadas1 = infraccion.getCoordenadas();
+			Double coordenadas2 = infraccion2.getCoordenadas();
+
+			cola.enqueue(infraccion);
+
+			while(coordenadas2.equals(coordenadas1)){
+				if(count>=comparables.length){
+					break;
+				}
+				cola.enqueue(infraccion2);
+				infraccion = infraccion2;
+				if(count>=comparables.length){
+					break;
+				}
+				infraccion2 = (VOMovingViolations) comparables[count];
+				count+=1;
+				coordenadas1=coordenadas2;
+				coordenadas2=infraccion2.getCoordenadas();
+
+			}
+
+			InfraccionesLocalizacion infracciones = new InfraccionesLocalizacion(coordenadas1+"", coordenadas2+"", infraccion.getLocation(), infraccion.getAddressId(), infraccion.getStreetSegId(), cola);
+			colaPrioridad.insert(infracciones);
+
+			while(cola.size()!=0){
+				cola.dequeue();
+			}
+
+		}
+
+		N*=2;
+		while(N>0){
+			listaFinal.enqueue(colaPrioridad.delMax());
+			N-=1;
+		}
+
+		return listaFinal;		
+
+
 	}
 
 	/**
 	 * Requerimiento 4C: Obtener la  información  de  los códigos (ViolationCode) ordenados por su numero de infracciones.
 	 * @return Contenedora de objetos InfraccionesViolationCode.
-	  // TODO Definir la estructura Contenedora
 	 */
-	//	public Contenedora<InfraccionesViolationCode> ordenarCodigosPorNumeroInfracciones()
-	//	{
-	//		// TODO completar
-	//		// TODO Definir la Estructura Contenedora
-	//		return null;		
-	//	}
+	public Queue<InfraccionesViolationCode> ordenarCodigosPorNumeroInfracciones(int N)
+	{
+
+		Queue<InfraccionesViolationCode> listaFinal = new Queue<InfraccionesViolationCode>();
+		Queue<VOMovingViolations> cola = new Queue<VOMovingViolations>();
+
+		ColaPrioridadHeap<VOMovingViolations> colaOrdenamiento = new ColaPrioridadHeap<VOMovingViolations>();
+		ColaPrioridadHeap<InfraccionesViolationCode> colaPrioridad = new ColaPrioridadHeap<InfraccionesViolationCode>();
+
+		Iterable<String> iterable = arbolRojoNegro.keys();
+		for(String s: iterable){
+			VOMovingViolations infraccion = arbolRojoNegro.get(Integer.parseInt(s)+"");
+			colaOrdenamiento.insert(infraccion);
+		}
+
+
+		while(colaOrdenamiento.size()!=0){
+
+			VOMovingViolations infraccion = colaOrdenamiento.delMax();
+			String code = infraccion.getViolationCode();
+			cola.enqueue(infraccion);
+
+			VOMovingViolations infraccion2 = colaOrdenamiento.delMax();
+			String code2 = infraccion2.getViolationCode();
+
+			while(code.equals(code2)&&colaOrdenamiento.size()!=0){
+				cola.enqueue(infraccion2);
+				infraccion2 = colaOrdenamiento.delMax();
+				code = code2;
+				code2 = infraccion2.getViolationCode();
+			}
+
+			InfraccionesViolationCode infracciones = new InfraccionesViolationCode(code, cola);
+			colaPrioridad.insert(infracciones);
+
+			while(cola.size()!=0){
+				cola.dequeue();
+			}
+			if(colaPrioridad.size()>N){
+				break;
+			}
+
+		}
+
+		N*=2;
+		while(N!=0){
+			listaFinal.enqueue(colaPrioridad.delMax());
+			N--;
+		}
+
+		return listaFinal;			
+	}
+
+	public String[] escribirTabla(Queue<InfraccionesViolationCode> cola){
+		String[] valores = new String[cola.size()];
+
+		int total = 0;
+		for(int i = 0; i<cola.size();i++){
+			InfraccionesViolationCode in = cola.dequeue();
+			int numero = in.getTotalInfracciones();
+			total+=numero;
+			cola.enqueue(in);
+		}
+
+		for(int i = 0; i<cola.size();i++){
+
+			int numero = cola.dequeue().getTotalInfracciones();
+			numero = (numero*100)/total;
+			int porcientos = (int) (numero/0.7);
+			valores[i]=">";
+
+			for(int j = 0; j<porcientos;j++){
+				valores[i] = valores[i]+"*";
+			}
+		}
+
+		return valores;
+	}
 
 
 	public void generarComparables(){

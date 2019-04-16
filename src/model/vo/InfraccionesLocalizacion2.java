@@ -1,24 +1,18 @@
 package model.vo;
 
-import java.util.Queue;
-
 /**  
  * Agrupa las infracciones por (Xcoord, Ycoord) 
  */
 
-public class InfraccionesLocalizacion extends EstadisticaInfracciones implements Comparable<InfraccionesLocalizacion> {	
+public class InfraccionesLocalizacion2 extends EstadisticaInfracciones {	
 
 	@Override
 	public String toString() {
-		return "InfraccionesLocalizacion [xcoord=" + xcoord + ", ycoord=" + ycoord + ",\n location=" + location
+		return "InfraccionesLocalizacion: " + "\n location=" + location
 				+ ",\n addressID=" + addressID + ",\n streetID=" + streetID + ",\n totalInfracciones=" + totalInfracciones
 				+ ",\n porcentajeAccidentes=" + porcentajeAccidentes + ",\n porcentajeNoAccidentes="
 				+ porcentajeNoAccidentes + ",\n valorTotal=" + valorTotal + "]\n\n";
 	}
-
-	private String xcoord;
-	
-	private String ycoord;
 	
 	private String location;
 	
@@ -32,56 +26,13 @@ public class InfraccionesLocalizacion extends EstadisticaInfracciones implements
 	 * @param listaBuscados the lista
 	 */
 	
-	public InfraccionesLocalizacion(String xcoor, String ycoor, String locat, String address, String street, model.data_structures.Queue<VOMovingViolations> listaBuscados) {
+	public InfraccionesLocalizacion2(String locat, String address, String street, model.data_structures.Queue<VOMovingViolations> listaBuscados) {
 		super(listaBuscados);
-		xcoord = xcoor;
-		ycoord = ycoor;
 		location = locat;
 		addressID = address;
 		streetID = street;
 
 	}
-
-
-	/**
-	 * Gets the xcoord.
-	 *
-	 * @return the xcoord
-	 */
-	public String getXcoord() {
-		return xcoord;
-	}
-
-
-	/**
-	 * Sets the xcoord.
-	 *
-	 * @param xcoord the xcoord to set
-	 */
-	public void setXcoord(String xcoord) {
-		this.xcoord = xcoord;
-	}
-
-
-	/**
-	 * Gets the ycoord.
-	 *
-	 * @return the ycoord
-	 */
-	public String getYcoord() {
-		return ycoord;
-	}
-
-
-	/**
-	 * Sets the ycoord.
-	 *
-	 * @param ycoord the ycoord to set
-	 */
-	public void setYcoord(String ycoord) {
-		this.ycoord = ycoord;
-	}
-
 
 	/**
 	 * Gets the adress ID.
@@ -129,11 +80,6 @@ public class InfraccionesLocalizacion extends EstadisticaInfracciones implements
 	 */
 	public String getLocation() {
 		return location;
-	}
-
-	@Override
-	public int compareTo(InfraccionesLocalizacion violation) {
-		return Integer.compare(getTotalInfracciones(), violation.getTotalInfracciones());
 	}
 
 }

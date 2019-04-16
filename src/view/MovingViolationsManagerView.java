@@ -53,9 +53,11 @@ public class MovingViolationsManagerView {
 		System.out.println("Min and Max, X and Y coords: [" + minimax[0] + ", " + minimax[1] + "], [" + minimax[2] + ", " + minimax[3] + "]");
 	}
 	
-	public void printReq1A(IQueue<InfraccionesFranjaHoraria> resultados) {
-		for(InfraccionesFranjaHoraria vinfraFranjas: resultados) {
-			System.out.println(vinfraFranjas.toString());
+	public void printReq1A(Queue<InfraccionesFranjaHoraria> resultados) {
+		for(int i = 0; i<resultados.size();i++) {
+			InfraccionesFranjaHoraria aaa = resultados.dequeue();
+			System.out.println("\n");
+			System.out.println(aaa.toString());
 			
 			/* Detalle de las infracciones (Se requiere SOLO en caso de validacion)*/
 			/*
@@ -129,8 +131,8 @@ public class MovingViolationsManagerView {
 		}
 	}
 	
-	public void printReq1C(InfraccionesLocalizacion resultado) {
-		System.out.println(resultado.toString());
+	public void printReq1C(InfraccionesLocalizacion2 infraccion) {
+		System.out.println(infraccion.toString());
 		/* Detalle de las infracciones (Se requiere SOLO en caso de validacion)*/
 		/*		
 		for(VOMovingViolations v: resultado.getListaInfracciones()) {
@@ -143,8 +145,8 @@ public class MovingViolationsManagerView {
 		System.out.println(resultado.toString());
 		
 		
-		for(InfraccionesViolationCode v: resultado.getInfViolationCode()) {
-			System.out.println(v.toString());
+		//for(int i = 0; i<resultado.getTotalInfracciones();i++) {
+			System.out.println(resultado.toString());
 
 			/* Detalle de las infracciones (Se requiere SOLO en caso de validacion)*/
 			/*
@@ -152,7 +154,7 @@ public class MovingViolationsManagerView {
 				System.out.println(vv.toString());
 			}
 			*/
-		}
+	//	}
 
 		/* Detalle de las infracciones (Se requiere SOLO en caso de validacion)*/
 		/*
@@ -163,9 +165,9 @@ public class MovingViolationsManagerView {
 	}
 	
 	
-	public void printReq3C(IQueue<InfraccionesLocalizacion> resultados) {
-		for(InfraccionesLocalizacion infraLoc: resultados) {
-			System.out.println(infraLoc.toString());
+	public void printReq3C(Queue<InfraccionesLocalizacion> resultados) {
+		for(int i = 0; i<resultados.size();i++) {
+			System.out.println(resultados.dequeue().toString());
 			/* Detalle de las infracciones (Se requiere SOLO en caso de validacion)*/
 			/*		
 			for(VOMovingViolations vo: infraLoc.getListaInfracciones()) {
@@ -176,10 +178,18 @@ public class MovingViolationsManagerView {
 	}
 	
 	
-//	public void printReq4C(Contenedora<InfraccionesViolationCode> resultados) {
-//		//TODO La estructura Contenedora depende del metodo que retorna el resultado
-//		//TODO Imprimir grafica ASCII con los codigos ordenados (de mayor a menor) por el total de sus infracciones 
-//	}
+	public void printReq4C(Queue<InfraccionesViolationCode> resultados, String[] strings) {
+		
+		System.out.println("Porcentaje de infracciones por Violation code");
+		System.out.println("ViolationCode| % de accidentes");
+		for(int i = 0; i<resultados.size();i++){
+			InfraccionesViolationCode infraccion = resultados.dequeue();
+			System.out.println(infraccion.getViolationCode()+"| "+strings[i].toString());
+		}
+		System.out.println("-------------------------");
+		System.out.println("Cada * representa 0,7%");
+		
+	}
 	
 
 }

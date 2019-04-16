@@ -116,6 +116,9 @@ public class VOMovingViolations  implements Comparable<VOMovingViolations>{
 	public String getViolationCode() {
 		return violationCode;
 	}
+	public double getCoordenadas(){
+		return yCoord + xCoord;
+	}
 	
 	public static class TicketIssueDate implements Comparator<VOMovingViolations>{
 
@@ -208,6 +211,22 @@ public class VOMovingViolations  implements Comparable<VOMovingViolations>{
 			 return object1.getViolationCode().compareToIgnoreCase(object2.getViolationCode());
 			 
 		
+		}
+		
+	}
+
+	public static class Coordenadas implements Comparator<VOMovingViolations>{
+
+		@Override
+		public int compare(VOMovingViolations object1, VOMovingViolations object2) {
+			
+			double coordenadasPrimero = object1.getXCoord()+object1.getYCoord();
+			double coordenadasSegundo = object2.getXCoord()+object2.getYCoord();
+			if(coordenadasPrimero>=coordenadasSegundo){
+				return 1;
+			}
+			else return -1;
+			 
 		}
 		
 	}
