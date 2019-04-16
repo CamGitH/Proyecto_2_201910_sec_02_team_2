@@ -530,20 +530,63 @@ public class MovingViolationsManager {
 	 */
 	public InfraccionesFranjaHorariaViolationCode consultarPorRangoHoras(LocalTime horaInicial, LocalTime horaFinal)
 	{
-		ManejoFechaHora conv= new ManejoFechaHora();
-		Queue listaBuscados = new Queue<>();
+	
+		Queue<VOMovingViolations> listaBuscados = new Queue<>();
 
 		Iterable<String> iterable = arbolRojoNegro.keys();
 		for(String s: iterable){
 			VOMovingViolations infraccion = arbolRojoNegro.get(Integer.parseInt(s)+"");
-			LocalTime pa = darHora(infraccion);
-			if(pa!=null){ 
-				if(pa.isAfter(horaInicial) && pa.isBefore(horaFinal)){	
+			LocalTime horaInfraccion = darHora(infraccion);
+			
+			if(horaInfraccion!=null){
+				if(horaInfraccion.isAfter(horaInicial) && horaInfraccion.isBefore(horaFinal)){	
 					listaBuscados.enqueue(infraccion);
 				}
 			}			
 		}
-		InfraccionesFranjaHorariaViolationCode ret = new InfraccionesFranjaHorariaViolationCode(horaInicial, horaFinal, listaBuscados, listaBuscados);
+		
+		
+		Queue<InfraccionesViolationCode> listaFinal = new Queue<InfraccionesViolationCode>();
+		Queue<VOMovingViolations> cola = new Queue<VOMovingViolations>();
+
+		ColaPrioridadHeap<VOMovingViolations> colaOrdenamiento = new ColaPrioridadHeap<VOMovingViolations>();
+		
+
+		
+		while(listaBuscados.size()>0){
+			colaOrdenamiento.insert(listaBuscados.dequeue());
+		}
+
+
+		while(colaOrdenamiento.size()!=0){
+
+			VOMovingViolations infraccion = colaOrdenamiento.delMax();
+			String code = infraccion.getViolationCode();
+			cola.enqueue(infraccion);
+
+			if(colaOrdenamiento.size()==0){
+				break;
+			}
+			VOMovingViolations infraccion2 = colaOrdenamiento.delMax();
+			String code2 = infraccion2.getViolationCode();
+
+			while(code.equals(code2)&&colaOrdenamiento.size()!=0){
+				cola.enqueue(infraccion2);
+				infraccion2 = colaOrdenamiento.delMax();
+				code = code2;
+				code2 = infraccion2.getViolationCode();
+			}
+
+			InfraccionesViolationCode infracciones = new InfraccionesViolationCode(code, cola);
+			
+			listaFinal.enqueue(infracciones);
+			while(cola.size()!=0){
+				cola.dequeue();
+			}
+
+		}
+		
+		InfraccionesFranjaHorariaViolationCode ret = new InfraccionesFranjaHorariaViolationCode(horaInicial, horaFinal, listaBuscados, listaFinal);
 		return ret;
 	}
 

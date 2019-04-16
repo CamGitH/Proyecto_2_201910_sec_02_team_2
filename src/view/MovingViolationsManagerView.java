@@ -142,17 +142,21 @@ public class MovingViolationsManagerView {
 	}
 	
 	public void printReq2C(InfraccionesFranjaHorariaViolationCode resultado) {
-		System.out.println(resultado.toString());
 		
-		
-		//for(int i = 0; i<resultado.getTotalInfracciones();i++) {
+			for(int i = 0; i<resultado.getInfViolationCode().size();i++) {
+				InfraccionesViolationCode infraccionCode = resultado.getInfViolationCode().dequeue();
+System.out.println("Infraccion: "+infraccionCode.getViolationCode());
+System.out.println("\nNumero de infracciones:\n");
+				System.out.println(infraccionCode.getTotalInfracciones());
+				
+			}
+			System.out.println("______________________");
 			System.out.println(resultado.toString());
 
 			/* Detalle de las infracciones (Se requiere SOLO en caso de validacion)*/
 			/*
 			for(VOMovingViolations vv: v.getListaInfracciones()) {
 				System.out.println(vv.toString());
-			}
 			*/
 	//	}
 
